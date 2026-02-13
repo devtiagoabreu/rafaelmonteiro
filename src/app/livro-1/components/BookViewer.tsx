@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import { Chapter } from '@/types'
+import './BookViewer.css'
 
 interface BookViewerProps {
   chapter: Chapter
@@ -49,16 +50,8 @@ export default function BookViewer({
     }
   }, [isNarrating, chapter, onNarrationEnd])
 
-  useEffect(() => {
-    if (contentRef.current) {
-      contentRef.current.style.fontSize = 
-        fontSize === 'small' ? '1.1rem' :
-        fontSize === 'medium' ? '1.25rem' : '1.4rem'
-    }
-  }, [fontSize])
-
   return (
-    <div className={`book-container font-${fontSize}`}>
+    <div className={`book-container ${fontSize === 'small' ? 'font-small' : fontSize === 'medium' ? 'font-medium' : 'font-large'}`}>
       <div 
         ref={contentRef}
         className="book-content"

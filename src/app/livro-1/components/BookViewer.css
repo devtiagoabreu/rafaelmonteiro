@@ -1,0 +1,416 @@
+/* Estilos do conteúdo do livro */
+.book-content {
+  width: 100%;
+  height: 100%;
+  padding: 45px;
+  overflow-y: auto;
+  font-family: 'Crimson Text', serif;
+  line-height: 1.8;
+  position: relative;
+}
+
+/* Estilização da barra de rolagem */
+.book-content::-webkit-scrollbar {
+  width: 12px;
+}
+
+.book-content::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 6px;
+}
+
+.book-content::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 6px;
+  border: 3px solid #f1f5f9;
+}
+
+.book-content::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
+}
+
+/* Títulos de capítulos */
+.book-content .chapter-title {
+  font-size: 2.4rem;
+  color: #2c3e50;
+  margin-bottom: 35px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e2e8f0;
+  text-align: center;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+/* Conteúdo do capítulo */
+.book-content .chapter-content {
+  max-width: 950px;
+  margin: 0 auto;
+  padding: 0 30px;
+}
+
+.book-content .chapter-content h3 {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  margin: 35px 0 20px 0;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e2e8f0;
+  font-weight: 600;
+}
+
+.book-content .chapter-content p {
+  margin-bottom: 25px;
+  text-align: justify;
+  font-size: 1.25rem;
+  line-height: 1.8;
+}
+
+.book-content .chapter-content ul,
+.book-content .chapter-content ol {
+  margin-left: 35px;
+  margin-bottom: 25px;
+}
+
+.book-content .chapter-content li {
+  margin-bottom: 12px;
+  font-size: 1.25rem;
+  line-height: 1.7;
+}
+
+.book-content .chapter-content blockquote {
+  border-left: 5px solid #4a5fa8;
+  padding-left: 25px;
+  margin: 30px 0;
+  font-style: italic;
+  color: #4a5568;
+  background-color: #f8fafc;
+  padding: 20px 25px;
+  border-radius: 0 10px 10px 0;
+  font-size: 1.3rem;
+  line-height: 1.7;
+}
+
+.book-content .chapter-content strong {
+  color: #2c3e50;
+  font-weight: 700;
+}
+
+/* Páginas especiais */
+.book-content .cover-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  background: linear-gradient(145deg, #2c3e50 0%, #4a5fa8 100%);
+  color: white;
+  padding: 70px;
+  min-height: 100%;
+  border-radius: 16px;
+}
+
+.book-content .cover-page h2 {
+  font-size: 3.8rem;
+  margin-bottom: 25px;
+  font-weight: 700;
+  line-height: 1.2;
+  color: white;
+}
+
+.book-content .cover-page .subtitle {
+  font-size: 2rem;
+  color: #e2e8f0;
+  margin-bottom: 45px;
+  font-weight: 400;
+}
+
+.book-content .cover-page .author {
+  font-size: 1.8rem;
+  margin-top: 70px;
+  color: #cbd5e0;
+}
+
+.book-content .dedication-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 70px;
+  background: #f8fafc;
+  min-height: 100%;
+  border-radius: 16px;
+}
+
+.book-content .dedication-page p {
+  font-size: 1.6rem;
+  line-height: 2;
+  margin-bottom: 25px;
+  font-style: italic;
+}
+
+.book-content .dedication-page strong {
+  font-size: 1.8rem;
+  color: #2c3e50;
+  display: block;
+  margin-bottom: 30px;
+}
+
+.book-content .preface-page,
+.book-content .toc-page,
+.book-content .back-cover-page {
+  padding: 70px;
+  min-height: 100%;
+}
+
+/* Sumário */
+.book-content .toc-title {
+  font-size: 2.6rem;
+  color: #2c3e50;
+  margin-bottom: 45px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.book-content .toc-list {
+  list-style-type: none;
+  padding-left: 0;
+  max-width: 850px;
+  margin: 0 auto;
+}
+
+.book-content .toc-item {
+  margin-bottom: 20px;
+  padding: 22px;
+  border-bottom: 1px solid #e2e8f0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.4rem;
+  border-left: 5px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  border-radius: 8px;
+}
+
+.book-content .toc-item:hover {
+  background-color: #f1f5f9;
+  padding-left: 30px;
+  border-left-color: #4a5fa8;
+  transform: translateX(5px);
+}
+
+.book-content .toc-item.active {
+  background-color: #edf2f7;
+  border-left-color: #4a5fa8;
+  padding-left: 27px;
+  font-weight: 600;
+}
+
+.book-content .toc-item i {
+  color: #4a5fa8;
+  font-size: 1.4rem;
+  min-width: 30px;
+}
+
+/* Contracapa */
+.book-content .back-cover-page h3 {
+  font-size: 2.4rem;
+  color: #2c3e50;
+  margin-bottom: 35px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.book-content .back-cover-page p {
+  font-size: 1.3rem;
+  line-height: 1.8;
+  margin-bottom: 30px;
+}
+
+.book-content .book-series {
+  margin-top: 60px;
+  padding: 35px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+  border: 1px solid #e2e8f0;
+}
+
+.book-content .book-series h3 {
+  font-size: 1.9rem;
+  color: #2c3e50;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.book-content .book-series ul {
+  list-style-type: none;
+  margin-left: 0;
+}
+
+.book-content .book-series li {
+  margin-bottom: 20px;
+  padding: 20px;
+  background-color: #f8fafc;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  font-size: 1.25rem;
+  border-left: 5px solid #4a5fa8;
+  line-height: 1.6;
+}
+
+/* Tamanhos de fonte */
+.font-small .book-content {
+  font-size: 1.1rem;
+}
+
+.font-small .book-content .chapter-title {
+  font-size: 2rem;
+}
+
+.font-small .book-content .chapter-content p,
+.font-small .book-content .chapter-content li {
+  font-size: 1.1rem;
+}
+
+.font-medium .book-content {
+  font-size: 1.25rem;
+}
+
+.font-medium .book-content .chapter-title {
+  font-size: 2.4rem;
+}
+
+.font-medium .book-content .chapter-content p,
+.font-medium .book-content .chapter-content li {
+  font-size: 1.25rem;
+}
+
+.font-large .book-content {
+  font-size: 1.4rem;
+}
+
+.font-large .book-content .chapter-title {
+  font-size: 2.8rem;
+}
+
+.font-large .book-content .chapter-content p,
+.font-large .book-content .chapter-content li {
+  font-size: 1.4rem;
+}
+
+/* Responsividade */
+@media (max-width: 1200px) {
+  .book-content {
+    padding: 35px;
+  }
+  
+  .book-content .chapter-content {
+    padding: 0 20px;
+  }
+  
+  .book-content h1 {
+    font-size: 2.6rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .book-content .chapter-title {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .book-content {
+    padding: 25px;
+  }
+  
+  .book-content .chapter-title {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+  }
+  
+  .book-content .chapter-content {
+    padding: 0;
+  }
+  
+  .book-content .chapter-content h3 {
+    font-size: 1.5rem;
+  }
+  
+  .book-content .chapter-content p,
+  .book-content .chapter-content li {
+    font-size: 1.1rem;
+  }
+  
+  .book-content .cover-page {
+    padding: 40px;
+  }
+  
+  .book-content .cover-page h2 {
+    font-size: 2.5rem;
+  }
+  
+  .book-content .cover-page .subtitle {
+    font-size: 1.5rem;
+  }
+  
+  .book-content .cover-page .author {
+    font-size: 1.4rem;
+    margin-top: 40px;
+  }
+  
+  .book-content .dedication-page {
+    padding: 40px;
+  }
+  
+  .book-content .dedication-page p {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .book-content {
+    padding: 20px;
+  }
+  
+  .book-content .chapter-title {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+  }
+  
+  .book-content .chapter-content h3 {
+    font-size: 1.3rem;
+  }
+  
+  .book-content .chapter-content p,
+  .book-content .chapter-content li {
+    font-size: 1rem;
+  }
+  
+  .book-content .cover-page {
+    padding: 30px;
+  }
+  
+  .book-content .cover-page h2 {
+    font-size: 2rem;
+  }
+  
+  .book-content .cover-page .subtitle {
+    font-size: 1.2rem;
+  }
+  
+  .book-content .cover-page .author {
+    font-size: 1.2rem;
+    margin-top: 30px;
+  }
+  
+  .book-content .dedication-page {
+    padding: 30px;
+  }
+  
+  .book-content .dedication-page p {
+    font-size: 1.1rem;
+  }
+}

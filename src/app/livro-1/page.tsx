@@ -49,7 +49,6 @@ export default function Livro1Page() {
     if (!session) {
       setShowRegistrationModal(true)
     } else {
-      // Usuário já logado, redirecionar para compra
       window.open(product.mpLink, '_blank')
     }
   }
@@ -63,6 +62,23 @@ export default function Livro1Page() {
             <i className="fas fa-book"></i>
             <span>O Desejo Não Morre</span>
           </a>
+          
+          <div className="page-nav-top">
+            <button 
+              className="nav-top-btn" 
+              onClick={() => setCurrentChapter(prev => Math.max(0, prev - 1))}
+              disabled={currentChapter === 0}
+            >
+              <i className="fas fa-chevron-left"></i>
+            </button>
+            <button 
+              className="nav-top-btn" 
+              onClick={() => setCurrentChapter(prev => Math.min(chapters.length - 1, prev + 1))}
+              disabled={currentChapter === chapters.length - 1}
+            >
+              <i className="fas fa-chevron-right"></i>
+            </button>
+          </div>
           
           <DownloadMenu />
           
@@ -102,8 +118,9 @@ export default function Livro1Page() {
         </div>
       </div>
 
-      {/* Cabeçalho do Livro */}
+      {/* Conteúdo Principal */}
       <div className="container">
+        {/* Cabeçalho */}
         <header>
           <h1>📘 {bookInfo.title}</h1>
           <p className="subtitle">{bookInfo.subtitle}</p>
@@ -175,151 +192,6 @@ export default function Livro1Page() {
             style={{ width: `${((currentChapter + 1) / chapters.length) * 100}%` }}
           ></div>
         </div>
-
-        {/* Seção de Outros Livros */}
-        <section className="other-books-section">
-          <h2 className="section-title">Continue Sua Jornada</h2>
-          <div className="books-grid">
-            {/* Livro 2 */}
-            <div className="book-card">
-              <div className="book-card-header">
-                <h3>Livro 2</h3>
-              </div>
-              <div className="book-card-body">
-                <h4>Por Que Você Se Atrai Sempre Pelo Mesmo Tipo de Pessoa</h4>
-                <ul>
-                  <li><i className="fas fa-check"></i> Padrões inconscientes de atração</li>
-                  <li><i className="fas fa-check"></i> Carência emocional e escolhas repetidas</li>
-                  <li><i className="fas fa-check"></i> Como quebrar ciclos destrutivos</li>
-                </ul>
-                <div className="price">
-                  <div className="old-price">R$ 47,90</div>
-                  <div className="new-price">R$ 29,90</div>
-                </div>
-                <button 
-                  className="buy-btn"
-                  onClick={() => handleBuyClick({
-                    id: 2,
-                    title: 'Por Que Você Se Atrai Sempre Pelo Mesmo Tipo de Pessoa',
-                    price: 29.90,
-                    mpLink: 'https://www.mercadopago.com.br/book2'
-                  })}
-                >
-                  Comprar Agora
-                </button>
-              </div>
-            </div>
-
-            {/* Livro 3 */}
-            <div className="book-card">
-              <div className="book-card-header">
-                <h3>Livro 3</h3>
-              </div>
-              <div className="book-card-body">
-                <h4>Ciúme, Insegurança e Medo de Perder</h4>
-                <ul>
-                  <li><i className="fas fa-check"></i> Origens emocionais do ciúme</li>
-                  <li><i className="fas fa-check"></i> Como reconstruir segurança emocional</li>
-                  <li><i className="fas fa-check"></i> Técnicas para lidar com a insegurança</li>
-                </ul>
-                <div className="price">
-                  <div className="old-price">R$ 47,90</div>
-                  <div className="new-price">R$ 29,90</div>
-                </div>
-                <button 
-                  className="buy-btn"
-                  onClick={() => handleBuyClick({
-                    id: 3,
-                    title: 'Ciúme, Insegurança e Medo de Perder',
-                    price: 29.90,
-                    mpLink: 'https://www.mercadopago.com.br/book3'
-                  })}
-                >
-                  Comprar Agora
-                </button>
-              </div>
-            </div>
-
-            {/* Livro 4 */}
-            <div className="book-card">
-              <div className="book-card-header">
-                <h3>Livro 4</h3>
-              </div>
-              <div className="book-card-body">
-                <h4>Quando o Amor Vira Dependência</h4>
-                <ul>
-                  <li><i className="fas fa-check"></i> A linha entre amar e se anular</li>
-                  <li><i className="fas fa-check"></i> Sinais de dependência emocional</li>
-                  <li><i className="fas fa-check"></i> Recuperando sua autonomia</li>
-                </ul>
-                <div className="price">
-                  <div className="old-price">R$ 47,90</div>
-                  <div className="new-price">R$ 29,90</div>
-                </div>
-                <button 
-                  className="buy-btn"
-                  onClick={() => handleBuyClick({
-                    id: 4,
-                    title: 'Quando o Amor Vira Dependência',
-                    price: 29.90,
-                    mpLink: 'https://www.mercadopago.com.br/book4'
-                  })}
-                >
-                  Comprar Agora
-                </button>
-              </div>
-            </div>
-
-            {/* Livro 5 */}
-            <div className="book-card">
-              <div className="book-card-header">
-                <h3>Livro 5</h3>
-              </div>
-              <div className="book-card-body">
-                <h4>Relacionamentos Conscientes</h4>
-                <ul>
-                  <li><i className="fas fa-check"></i> Como amar sem se perder</li>
-                  <li><i className="fas fa-check"></i> Comunicação não violenta</li>
-                  <li><i className="fas fa-check"></i> Limites saudáveis</li>
-                </ul>
-                <div className="price">
-                  <div className="old-price">R$ 47,90</div>
-                  <div className="new-price">R$ 29,90</div>
-                </div>
-                <button 
-                  className="buy-btn"
-                  onClick={() => handleBuyClick({
-                    id: 5,
-                    title: 'Relacionamentos Conscientes',
-                    price: 29.90,
-                    mpLink: 'https://www.mercadopago.com.br/book5'
-                  })}
-                >
-                  Comprar Agora
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* Pacote Completo */}
-          <div className="combo-section">
-            <h3>Pacote Completo com Super Desconto</h3>
-            <p>Adquira todos os 4 próximos livros com um desconto especial!</p>
-            <div className="combo-price">R$ 89,90</div>
-            <div className="combo-save">De R$ 191,60 • Economize R$ 101,70</div>
-            <button 
-              className="buy-btn special-price"
-              onClick={() => handleBuyClick({
-                id: 'combo',
-                title: 'Pacote Completo',
-                price: 89.90,
-                mpLink: 'https://www.mercadopago.com.br/combo'
-              })}
-            >
-              <i className="fas fa-gift"></i> Comprar Pacote Completo
-            </button>
-          </div>
-        </section>
       </div>
 
       {/* Modais */}
