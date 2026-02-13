@@ -9,8 +9,7 @@ import ShareModal from './components/ShareModal'
 import BookmarksModal from './components/BookmarksModal'
 import RegistrationModal from './components/RegistrationModal'
 import { chapters, bookInfo } from '@/data/livro-1'
-import '@/app/globals.css'
-import './components/BookViewer.css'
+import './livro-1.css'
 
 export default function Livro1Page() {
   const { data: session } = useSession()
@@ -21,9 +20,9 @@ export default function Livro1Page() {
   const [showShareModal, setShowShareModal] = useState(false)
   const [showBookmarksModal, setShowBookmarksModal] = useState(false)
   const [showRegistrationModal, setShowRegistrationModal] = useState(false)
+  const [showSalesPage, setShowSalesPage] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<any>(null)
 
-  // Carregar preferências salvas
   useEffect(() => {
     const savedBookmarks = localStorage.getItem('bookmarkedChapters')
     if (savedBookmarks) {
@@ -36,7 +35,6 @@ export default function Livro1Page() {
     }
   }, [])
 
-  // Salvar preferências quando mudar
   useEffect(() => {
     localStorage.setItem('bookmarkedChapters', JSON.stringify(bookmarkedChapters))
   }, [bookmarkedChapters])
@@ -55,11 +53,19 @@ export default function Livro1Page() {
   }
 
   const handleShowToc = () => {
-    setCurrentChapter(3) // Índice do sumário
+    setCurrentChapter(3)
+  }
+
+  const handleNextBooks = () => {
+    setShowSalesPage(true)
+  }
+
+  const handleBackToBook = () => {
+    setShowSalesPage(false)
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
+    <div className="livro-1-page">
       {/* Menu Superior */}
       <div className="top-menu">
         <div className="top-menu-left">
@@ -105,10 +111,10 @@ export default function Livro1Page() {
         </div>
         
         <div className="top-menu-right">
-          <a href="/#livros" className="menu-btn">
+          <button className="menu-btn" onClick={handleNextBooks}>
             <i className="fas fa-shopping-cart"></i>
-            <span>Outros Livros</span>
-          </a>
+            <span>Próximos Livros</span>
+          </button>
           {session ? (
             <a href="/dashboard" className="menu-btn">
               <i className="fas fa-user"></i>
@@ -123,78 +129,224 @@ export default function Livro1Page() {
         </div>
       </div>
 
-      {/* Conteúdo Principal */}
-      <div className="container">
-        <header>
-          <h1>📘 {bookInfo.title}</h1>
-          <p className="subtitle">{bookInfo.subtitle}</p>
-          <p className="author">{bookInfo.author} • {bookInfo.authorTitle}</p>
-        </header>
+      {/* Conteúdo Principal ou Página de Vendas */}
+      {!showSalesPage ? (
+        <div className="container" id="mainContent">
+          <header>
+            <h1>📘 {bookInfo.title}</h1>
+            <p className="subtitle">{bookInfo.subtitle}</p>
+            <p className="author">{bookInfo.author} • {bookInfo.authorTitle}</p>
+          </header>
 
-        <BookControls 
-          currentChapter={currentChapter}
-          totalChapters={chapters.length}
-          fontSize={fontSize}
-          onPrevChapter={() => setCurrentChapter(prev => Math.max(0, prev - 1))}
-          onNextChapter={() => setCurrentChapter(prev => Math.min(chapters.length - 1, prev + 1))}
-          onFontIncrease={() => {
-            if (fontSize === 'small') setFontSize('medium')
-            else if (fontSize === 'medium') setFontSize('large')
-          }}
-          onFontDecrease={() => {
-            if (fontSize === 'large') setFontSize('medium')
-            else if (fontSize === 'medium') setFontSize('small')
-          }}
-          onToggleNarration={() => setIsNarrating(!isNarrating)}
-          isNarrating={isNarrating}
-          onToggleBookmark={() => {
-            if (bookmarkedChapters.includes(currentChapter)) {
-              setBookmarkedChapters(bookmarkedChapters.filter(c => c !== currentChapter))
-            } else {
-              setBookmarkedChapters([...bookmarkedChapters, currentChapter])
-            }
-          }}
-          isBookmarked={bookmarkedChapters.includes(currentChapter)}
-          onShowToc={handleShowToc}
-        />
+          <BookControls 
+            currentChapter={currentChapter}
+            totalChapters={chapters.length}
+            fontSize={fontSize}
+            onPrevChapter={() => setCurrentChapter(prev => Math.max(0, prev - 1))}
+            onNextChapter={() => setCurrentChapter(prev => Math.min(chapters.length - 1, prev + 1))}
+            onFontIncrease={() => {
+              if (fontSize === 'small') setFontSize('medium')
+              else if (fontSize === 'medium') setFontSize('large')
+            }}
+            onFontDecrease={() => {
+              if (fontSize === 'large') setFontSize('medium')
+              else if (fontSize === 'medium') setFontSize('small')
+            }}
+            onToggleNarration={() => setIsNarrating(!isNarrating)}
+            isNarrating={isNarrating}
+            onToggleBookmark={() => {
+              if (bookmarkedChapters.includes(currentChapter)) {
+                setBookmarkedChapters(bookmarkedChapters.filter(c => c !== currentChapter))
+              } else {
+                setBookmarkedChapters([...bookmarkedChapters, currentChapter])
+              }
+            }}
+            isBookmarked={bookmarkedChapters.includes(currentChapter)}
+            onShowToc={handleShowToc}
+          />
 
-        <BookViewer 
-          chapter={chapters[currentChapter]}
-          fontSize={fontSize}
-          isNarrating={isNarrating}
-          onNarrationEnd={() => setIsNarrating(false)}
-        />
+          <BookViewer 
+            chapter={chapters[currentChapter]}
+            fontSize={fontSize}
+            isNarrating={isNarrating}
+            onNarrationEnd={() => setIsNarrating(false)}
+          />
 
-        <div className="navigation">
-          <button 
-            className="nav-btn" 
-            onClick={() => setCurrentChapter(prev => Math.max(0, prev - 1))}
-            disabled={currentChapter === 0}
-          >
-            <i className="fas fa-chevron-left"></i>
-          </button>
-          
-          <div className="page-counter">
-            <span>{currentChapter + 1}</span> de <span>{chapters.length}</span>
+          <div className="navigation">
+            <button 
+              className="nav-btn" 
+              onClick={() => setCurrentChapter(prev => Math.max(0, prev - 1))}
+              disabled={currentChapter === 0}
+            >
+              <i className="fas fa-chevron-left"></i>
+            </button>
+            
+            <div className="page-counter">
+              <span>{currentChapter + 1}</span> de <span>{chapters.length}</span>
+            </div>
+            
+            <button 
+              className="nav-btn" 
+              onClick={() => setCurrentChapter(prev => Math.min(chapters.length - 1, prev + 1))}
+              disabled={currentChapter === chapters.length - 1}
+            >
+              <i className="fas fa-chevron-right"></i>
+            </button>
+          </div>
+
+          <div className="progress-bar">
+            <div 
+              className="progress" 
+              style={{ width: `${((currentChapter + 1) / chapters.length) * 100}%` }}
+            ></div>
+          </div>
+        </div>
+      ) : (
+        <div className="sales-page active">
+          <div className="sales-header">
+            <h2>Continue Sua Jornada de Transformação</h2>
+            <p>Descubra os próximos livros da série que vão te ajudar a reconstruir relacionamentos mais saudáveis, conscientes e satisfatórios.</p>
+            <button className="back-to-book" onClick={handleBackToBook}>
+              <i className="fas fa-arrow-left"></i> Voltar para o Livro
+            </button>
           </div>
           
-          <button 
-            className="nav-btn" 
-            onClick={() => setCurrentChapter(prev => Math.min(chapters.length - 1, prev + 1))}
-            disabled={currentChapter === chapters.length - 1}
-          >
-            <i className="fas fa-chevron-right"></i>
-          </button>
+          <div className="books-grid">
+            {/* Livro 2 */}
+            <div className="book-card">
+              <div className="book-card-header">
+                <h3>Livro 2</h3>
+              </div>
+              <div className="book-card-body">
+                <h4>Por Que Você Se Atrai Sempre Pelo Mesmo Tipo de Pessoa</h4>
+                <ul>
+                  <li><i className="fas fa-check"></i> Padrões inconscientes de atração</li>
+                  <li><i className="fas fa-check"></i> Carência emocional e escolhas repetidas</li>
+                  <li><i className="fas fa-check"></i> Como quebrar ciclos destrutivos</li>
+                  <li><i className="fas fa-check"></i> Exercícios para autoconhecimento</li>
+                </ul>
+                <div className="price">
+                  <div className="old-price">R$ 47,90</div>
+                  <div className="new-price">R$ 29,90</div>
+                  <span className="discount-badge">-38% de desconto</span>
+                </div>
+                <button className="buy-btn" onClick={() => handleBuyClick({
+                  id: 2,
+                  title: 'Por Que Você Se Atrai Sempre Pelo Mesmo Tipo de Pessoa',
+                  price: 29.90,
+                  mpLink: 'https://www.mercadopago.com.br/book2'
+                })}>
+                  Comprar Agora
+                </button>
+              </div>
+            </div>
+            
+            {/* Livro 3 */}
+            <div className="book-card">
+              <div className="book-card-header">
+                <h3>Livro 3</h3>
+              </div>
+              <div className="book-card-body">
+                <h4>Ciúme, Insegurança e Medo de Perder</h4>
+                <ul>
+                  <li><i className="fas fa-check"></i> Origens emocionais do ciúme</li>
+                  <li><i className="fas fa-check"></i> Como reconstruir segurança emocional</li>
+                  <li><i className="fas fa-check"></i> Técnicas para lidar com a insegurança</li>
+                  <li><i className="fas fa-check"></i> Autoconfiança nos relacionamentos</li>
+                </ul>
+                <div className="price">
+                  <div className="old-price">R$ 47,90</div>
+                  <div className="new-price">R$ 29,90</div>
+                  <span className="discount-badge">-38% de desconto</span>
+                </div>
+                <button className="buy-btn" onClick={() => handleBuyClick({
+                  id: 3,
+                  title: 'Ciúme, Insegurança e Medo de Perder',
+                  price: 29.90,
+                  mpLink: 'https://www.mercadopago.com.br/book3'
+                })}>
+                  Comprar Agora
+                </button>
+              </div>
+            </div>
+            
+            {/* Livro 4 */}
+            <div className="book-card">
+              <div className="book-card-header">
+                <h3>Livro 4</h3>
+              </div>
+              <div className="book-card-body">
+                <h4>Quando o Amor Vira Dependência</h4>
+                <ul>
+                  <li><i className="fas fa-check"></i> A linha entre amar e se anular</li>
+                  <li><i className="fas fa-check"></i> Sinais de dependência emocional</li>
+                  <li><i className="fas fa-check"></i> Recuperando sua autonomia</li>
+                  <li><i className="fas fa-check"></i> Amor saudável vs. apego doentio</li>
+                </ul>
+                <div className="price">
+                  <div className="old-price">R$ 47,90</div>
+                  <div className="new-price">R$ 29,90</div>
+                  <span className="discount-badge">-38% de desconto</span>
+                </div>
+                <button className="buy-btn" onClick={() => handleBuyClick({
+                  id: 4,
+                  title: 'Quando o Amor Vira Dependência',
+                  price: 29.90,
+                  mpLink: 'https://www.mercadopago.com.br/book4'
+                })}>
+                  Comprar Agora
+                </button>
+              </div>
+            </div>
+            
+            {/* Livro 5 */}
+            <div className="book-card">
+              <div className="book-card-header">
+                <h3>Livro 5</h3>
+              </div>
+              <div className="book-card-body">
+                <h4>Relacionamentos Conscientes</h4>
+                <ul>
+                  <li><i className="fas fa-check"></i> Como amar sem se perder</li>
+                  <li><i className="fas fa-check"></i> Comunicação não violenta</li>
+                  <li><i className="fas fa-check"></i> Limites saudáveis</li>
+                  <li><i className="fas fa-check"></i> Intimidade emocional madura</li>
+                </ul>
+                <div className="price">
+                  <div className="old-price">R$ 47,90</div>
+                  <div className="new-price">R$ 29,90</div>
+                  <span className="discount-badge">-38% de desconto</span>
+                </div>
+                <button className="buy-btn" onClick={() => handleBuyClick({
+                  id: 5,
+                  title: 'Relacionamentos Conscientes',
+                  price: 29.90,
+                  mpLink: 'https://www.mercadopago.com.br/book5'
+                })}>
+                  Comprar Agora
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div className="combo-section">
+            <h3>Pacote Completo com Super Desconto</h3>
+            <p>Adquira todos os 4 próximos livros com um desconto especial!</p>
+            <div className="combo-price">R$ 89,90</div>
+            <div className="combo-save">De R$ 191,60 • Economize R$ 101,70</div>
+            <button className="buy-btn special-price" onClick={() => handleBuyClick({
+              id: 'combo',
+              title: 'Pacote Completo',
+              price: 89.90,
+              mpLink: 'https://www.mercadopago.com.br/combo'
+            })}>
+              <i className="fas fa-gift"></i> Comprar Pacote Completo
+            </button>
+          </div>
         </div>
+      )}
 
-        <div className="progress-bar">
-          <div 
-            className="progress" 
-            style={{ width: `${((currentChapter + 1) / chapters.length) * 100}%` }}
-          ></div>
-        </div>
-      </div>
-
+      {/* Modais */}
       <ShareModal 
         isOpen={showShareModal}
         onClose={() => setShowShareModal(false)}
@@ -217,6 +369,17 @@ export default function Livro1Page() {
         onClose={() => setShowRegistrationModal(false)}
         selectedProduct={selectedProduct}
       />
+
+      {/* Indicador de narração */}
+      {isNarrating && (
+        <div className="narration-indicator">
+          <i className="fas fa-volume-up"></i>
+          <span>Narração em andamento...</span>
+          <button id="stopNarration" onClick={() => setIsNarrating(false)}>
+            <i className="fas fa-stop"></i>
+          </button>
+        </div>
+      )}
     </div>
   )
 }

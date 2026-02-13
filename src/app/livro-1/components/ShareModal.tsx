@@ -31,7 +31,9 @@ export default function ShareModal({ isOpen, onClose, bookTitle }: ShareModalPro
         return
     }
 
-    window.open(shareWindowUrl, '_blank', 'width=600,height=400')
+    if (shareWindowUrl) {
+      window.open(shareWindowUrl, '_blank', 'width=600,height=400')
+    }
     onClose()
   }
 
