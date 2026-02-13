@@ -61,38 +61,12 @@ async function main() {
   for (const product of products) {
     await prisma.product.upsert({
       where: { 
-        bookNumber: product.bookNumber ?? 999 
+        bookNumber: product.bookNumber ?? 999999 
       },
       update: {},
       create: product
     })
   }
-
-  // Criar usuário admin
-  const adminPassword = await bcrypt.hash('Admin@123', 10)
-  await prisma.user.upsert({
-    where: { email: 'admin@jornadaconsciente.com.br' },
-    update: {},
-    create: {
-      email: 'admin@jornadaconsciente.com.br',
-      fullName: 'Administrador',
-      phone: '+5511999999999',
-      passwordHash: adminPassword
-    }
-  })
-
-  // Criar usuário teste
-  const testPassword = await bcrypt.hash('Teste@123', 10)
-  await prisma.user.upsert({
-    where: { email: 'teste@email.com' },
-    update: {},
-    create: {
-      email: 'teste@email.com',
-      fullName: 'Usuário Teste',
-      phone: '+5511988887777',
-      passwordHash: testPassword
-    }
-  })
 
   console.log('✅ Seed completed!')
 }

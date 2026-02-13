@@ -44,10 +44,12 @@ export default function Livro1Page() {
   }, [fontSize])
 
   const handleBuyClick = (product: any) => {
+    console.log('Produto selecionado:', product)
     setSelectedProduct(product)
     if (!session) {
       setShowRegistrationModal(true)
     } else {
+      // Usuário já logado, redirecionar para compra
       window.open(product.mpLink, '_blank')
     }
   }

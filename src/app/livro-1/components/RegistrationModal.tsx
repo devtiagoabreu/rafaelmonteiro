@@ -60,31 +60,63 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
     if (!validateForm()) return
 
     setIsLoading(true)
+    setErrors({})
 
     try {
+      console.log('Enviando dados:', {
+        ...formData,
+        productId: selectedProduct?.id
+      })
+
       const res = await fetch('/api/livro-1/registrar-acesso', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
         body: JSON.stringify({
-          ...formData,
-          productId: selectedProduct?.id
+          fullName: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          productId: selectedProduct?.id?.toString() || ''
         })
       })
 
       const data = await res.json()
+      console.log('Resposta da API:', data)
 
       if (!res.ok) {
-        throw new Error(data.error || 'Erro ao registrar')
+        throw new Error(data.error || `Erro ${res.status}: ${res.statusText}`)
       }
 
-      window.open(selectedProduct?.mpLink, '_blank')
+      // Sucesso - abrir link do Mercado Pago
+      if (selectedProduct?.mpLink) {
+        window.open(selectedProduct.mpLink, '_blank')
+      }
+      
       onClose()
-      router.push('/obrigado')
+      
+      // Mostrar mensagem de sucesso
+      alert('Cadastro realizado com sucesso! Você será redirecionado para o pagamento.')
 
     } catch (error: any) {
-      setErrors({ submit: error.message })
+      console.error('Erro no cadastro:', error)
+      setErrors({ submit: error.message || 'Erro ao processar cadastro. Tente novamente.' })
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target
+    setFormData(prev => ({ ...prev, [id]: value }))
+    // Limpar erro do campo quando começar a digitar
+    if (errors[id]) {
+      setErrors(prev => {
+        const newErrors = { ...prev }
+        delete newErrors[id]
+        return newErrors
+      })
     }
   }
 
@@ -105,59 +137,67 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
           </div>
 
           {errors.submit && (
-            <div className="error-message show" style={{ marginBottom: '20px' }}>
+            <div className="error-message show" style={{ marginBottom: '20px', color: '#EF4444', background: '#FEE2E2', padding: '10px', borderRadius: '4px' }}>
               {errors.submit}
             </div>
           )}
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label>Nome Completo *</label>
+              <label htmlFor="fullName">Nome Completo *</label>
               <input
                 type="text"
+                id="fullName"
                 value={formData.fullName}
-                onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+                onChange={handleInputChange}
                 className={errors.fullName ? 'error' : ''}
+                disabled={isLoading}
               />
               {errors.fullName && <div className="error-message show">{errors.fullName}</div>}
             </div>
 
             <div className="form-group">
-              <label>Email *</label>
+              <label htmlFor="email">Email *</label>
               <input
                 type="email"
+                id="email"
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                onChange={handleInputChange}
                 className={errors.email ? 'error' : ''}
+                disabled={isLoading}
               />
               {errors.email && <div className="error-message show">{errors.email}</div>}
             </div>
 
             <div className="form-group">
-              <label>Confirmar Email *</label>
+              <label htmlFor="confirmEmail">Confirmar Email *</label>
               <input
                 type="email"
+                id="confirmEmail"
                 value={formData.confirmEmail}
-                onChange={(e) => setFormData({ ...formData, confirmEmail: e.target.value })}
+                onChange={handleInputChange}
                 className={errors.confirmEmail ? 'error' : ''}
+                disabled={isLoading}
               />
               {errors.confirmEmail && <div className="error-message show">{errors.confirmEmail}</div>}
             </div>
 
             <div className="form-group">
-              <label>Celular com DDD *</label>
+              <label htmlFor="phone">Celular com DDD *</label>
               <input
                 type="tel"
+                id="phone"
                 value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                onChange={handleInputChange}
                 placeholder="(11) 99999-9999"
                 className={errors.phone ? 'error' : ''}
+                disabled={isLoading}
               />
               {errors.phone && <div className="error-message show">{errors.phone}</div>}
             </div>
 
             <div className="form-actions">
-              <button type="button" className="btn-secondary" onClick={onClose}>
+              <button type="button" className="btn-secondary" onClick={onClose} disabled={isLoading}>
                 Cancelar
               </button>
               <button type="submit" className="btn-primary" disabled={isLoading}>
