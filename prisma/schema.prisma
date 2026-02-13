@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  fullName      String    @map("full_name")
+  phone         String?
+  passwordHash  String?   @map("password_hash")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+  lastLogin     DateTime? @map("last_login")
+  
+  products      UserProduct[]
+  
+  @@map("users")
+}
+
+model Product {
+  id          String    @id @default(uuid())
+  title       String
+  description String?
+  price       Float
+  bookNumber  Int?      @unique @map("book_number")
+  isCombo     Boolean   @default(false) @map("is_combo")
+  mpLink      String    @map("mp_link")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  
+  users       UserProduct[]
+  
+  @@map("products")
+}
+
+model UserProduct {
+  id            String    @id @default(uuid())
+  userId        String    @map("user_id")
+  productId     String    @map("product_id")
+  purchasedAt   DateTime  @default(now()) @map("purchased_at")
+  paymentStatus String    @default("pending") @map("payment_status")
+  mpPaymentId   String?   @map("mp_payment_id")
+  
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product       Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, productId])
+  @@map("user_products")
+}
