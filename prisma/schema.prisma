@@ -1,12 +1,16 @@
+// prisma/schema.prisma
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  // DEIXE COMENTADO - O Prisma 6.x ainda precisa ver a referência
+  // A URL real está no prisma.config.ts
+  url      = env("DATABASE_URL")  // <- COMENTE ESTA LINHA? NÃO! PRECISA DELA?
 }
 
+// SEUS MODELS AQUI
 model User {
   id            String    @id @default(uuid())
   email         String    @unique
