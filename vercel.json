@@ -1,0 +1,7 @@
+{
+  "build": {
+    "env": {
+      "DATABASE_URL": "postgresql://neondb_owner:npg_qbTGfQ1rZDz7@ep-floral-unit-aciowafl-pooler.sa-east-1.aws.neon.tech/vendas_ebooks?sslmode=require"
+    }
+  }
+}
