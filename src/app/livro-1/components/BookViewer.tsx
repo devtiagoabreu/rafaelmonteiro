@@ -50,6 +50,18 @@ export default function BookViewer({
     }
   }, [isNarrating, chapter, onNarrationEnd])
 
+  // Aplicar tamanho da fonte
+  useEffect(() => {
+    if (contentRef.current) {
+      const fontSizeMap = {
+        small: '1.1rem',
+        medium: '1.25rem',
+        large: '1.4rem'
+      }
+      contentRef.current.style.fontSize = fontSizeMap[fontSize]
+    }
+  }, [fontSize])
+
   return (
     <div className={`book-container ${fontSize === 'small' ? 'font-small' : fontSize === 'medium' ? 'font-medium' : 'font-large'}`}>
       <div 

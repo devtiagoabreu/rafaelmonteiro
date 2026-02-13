@@ -9,6 +9,8 @@ import ShareModal from './components/ShareModal'
 import BookmarksModal from './components/BookmarksModal'
 import RegistrationModal from './components/RegistrationModal'
 import { chapters, bookInfo } from '@/data/livro-1'
+import '@/app/globals.css'
+import './components/BookViewer.css'
 
 export default function Livro1Page() {
   const { data: session } = useSession()
@@ -34,12 +36,11 @@ export default function Livro1Page() {
     }
   }, [])
 
-  // Salvar marcações quando mudar
+  // Salvar preferências quando mudar
   useEffect(() => {
     localStorage.setItem('bookmarkedChapters', JSON.stringify(bookmarkedChapters))
   }, [bookmarkedChapters])
 
-  // Salvar tamanho da fonte
   useEffect(() => {
     localStorage.setItem('fontSize', fontSize)
   }, [fontSize])
@@ -51,6 +52,10 @@ export default function Livro1Page() {
     } else {
       window.open(product.mpLink, '_blank')
     }
+  }
+
+  const handleShowToc = () => {
+    setCurrentChapter(3) // Índice do sumário
   }
 
   return (
@@ -120,14 +125,12 @@ export default function Livro1Page() {
 
       {/* Conteúdo Principal */}
       <div className="container">
-        {/* Cabeçalho */}
         <header>
           <h1>📘 {bookInfo.title}</h1>
           <p className="subtitle">{bookInfo.subtitle}</p>
           <p className="author">{bookInfo.author} • {bookInfo.authorTitle}</p>
         </header>
 
-        {/* Controles */}
         <BookControls 
           currentChapter={currentChapter}
           totalChapters={chapters.length}
@@ -152,9 +155,9 @@ export default function Livro1Page() {
             }
           }}
           isBookmarked={bookmarkedChapters.includes(currentChapter)}
+          onShowToc={handleShowToc}
         />
 
-        {/* Visualizador do Livro */}
         <BookViewer 
           chapter={chapters[currentChapter]}
           fontSize={fontSize}
@@ -162,7 +165,6 @@ export default function Livro1Page() {
           onNarrationEnd={() => setIsNarrating(false)}
         />
 
-        {/* Navegação */}
         <div className="navigation">
           <button 
             className="nav-btn" 
@@ -185,7 +187,6 @@ export default function Livro1Page() {
           </button>
         </div>
 
-        {/* Barra de Progresso */}
         <div className="progress-bar">
           <div 
             className="progress" 
@@ -194,7 +195,6 @@ export default function Livro1Page() {
         </div>
       </div>
 
-      {/* Modais */}
       <ShareModal 
         isOpen={showShareModal}
         onClose={() => setShowShareModal(false)}

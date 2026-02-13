@@ -1,10 +1,15 @@
-import { Chapter } from '@/types'
-
 export const bookInfo = {
   title: "O Desejo Não Morre — Ele É Mal Cuidado",
   subtitle: "Um guia direto, humano e terapêutico para reconstruir a intimidade no relacionamento",
   author: "Rafael Monteiro",
   authorTitle: "Terapeuta de Relacionamentos e Sexualidade"
+}
+
+export interface Chapter {
+  id: number
+  type: 'cover' | 'dedication' | 'preface' | 'toc' | 'chapter' | 'back-cover'
+  title: string
+  content: string
 }
 
 export const chapters: Chapter[] = [
@@ -129,7 +134,6 @@ export const chapters: Chapter[] = [
       </div>
     `
   },
-  // Capítulo 1
   {
     id: 4,
     type: "chapter",
@@ -176,11 +180,11 @@ export const chapters: Chapter[] = [
         silencioso:</p>
         
         <ul>
-            <li>Vocês quase não se tocam fora do momento do sexo</li>
-            <li>O contato virou funcional: beijo rápido, abraço de "oi"</li>
-            <li>As conversas são só sobre problemas, dinheiro e obrigações</li>
-            <li>O celular recebe mais atenção do que a pessoa ao seu lado</li>
-            <li>O sexo acontece no piloto automático (ou nem acontece)</li>
+          <li>Vocês quase não se tocam fora do momento do sexo</li>
+          <li>O contato virou funcional: beijo rápido, abraço de "oi"</li>
+          <li>As conversas são só sobre problemas, dinheiro e obrigações</li>
+          <li>O celular recebe mais atenção do que a pessoa ao seu lado</li>
+          <li>O sexo acontece no piloto automático (ou nem acontece)</li>
         </ul>
         
         <p>Nada disso, isoladamente, destrói um relacionamento.<br>
@@ -201,11 +205,11 @@ export const chapters: Chapter[] = [
         <p>Clima é:</p>
         
         <ul>
-            <li>Atenção</li>
-            <li>Presença</li>
-            <li>Toque</li>
-            <li>Interesse genuíno</li>
-            <li>Um pouco de novidade</li>
+          <li>Atenção</li>
+          <li>Presença</li>
+          <li>Toque</li>
+          <li>Interesse genuíno</li>
+          <li>Um pouco de novidade</li>
         </ul>
         
         <p>Quando isso some, a vontade some junto.<br>
@@ -228,10 +232,10 @@ export const chapters: Chapter[] = [
         <p>Falta de intenção em:</p>
         
         <ul>
-            <li>Criar momentos</li>
-            <li>Quebrar a rotina</li>
-            <li>Manter o toque</li>
-            <li>Cuidar do clima emocional</li>
+          <li>Criar momentos</li>
+          <li>Quebrar a rotina</li>
+          <li>Manter o toque</li>
+          <li>Cuidar do clima emocional</li>
         </ul>
         
         <h3>Um pequeno teste de honestidade</h3>
@@ -239,9 +243,9 @@ export const chapters: Chapter[] = [
         <p>Responda mentalmente, sem se julgar:</p>
         
         <ul>
-            <li>Quando foi a última vez que você elogiou seu parceiro(a) sem motivo?</li>
-            <li>Quando foi a última vez que você tocou sem esperar sexo em troca?</li>
-            <li>Quando foi a última vez que vocês riam juntos de verdade?</li>
+          <li>Quando foi a última vez que você elogiou seu parceiro(a) sem motivo?</li>
+          <li>Quando foi a última vez que você tocou sem esperar sexo em troca?</li>
+          <li>Quando foi a última vez que vocês riam juntos de verdade?</li>
         </ul>
         
         <p>Se você teve dificuldade para lembrar, isso não significa que o
@@ -271,15 +275,6 @@ export const chapters: Chapter[] = [
       </div>
     `
   }
-  // CONTINUE AQUI COM OS DEMAIS CAPÍTULOS DO SEU HTML (id 5 até 16)
-  // Copie o conteúdo dos capítulos 2 a 12 e contracapa do seu HTML original
+  // ADICIONE AQUI OS CAPÍTULOS 5 ATÉ 16 DO SEU HTML ORIGINAL
+  // Copie exatamente o conteúdo dos capítulos 2 a 12 e contracapa
 ]
-
-// Para os demais capítulos (5 a 16), copie exatamente o conteúdo do seu arquivo HTML
-// Mantenha a mesma estrutura:
-// {
-//   id: 5,
-//   type: "chapter",
-//   title: "Capítulo 2 — ...",
-//   content: `...` // todo o HTML do capítulo
-// }

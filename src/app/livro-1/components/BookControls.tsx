@@ -12,6 +12,7 @@ interface BookControlsProps {
   isNarrating: boolean
   onToggleBookmark: () => void
   isBookmarked: boolean
+  onShowToc: () => void
 }
 
 export default function BookControls({
@@ -25,7 +26,8 @@ export default function BookControls({
   onToggleNarration,
   isNarrating,
   onToggleBookmark,
-  isBookmarked
+  isBookmarked,
+  onShowToc
 }: BookControlsProps) {
   
   const fontSizeLabels = {
@@ -45,7 +47,7 @@ export default function BookControls({
           <i className="fas fa-arrow-left"></i> Anterior
         </button>
         
-        <button className="btn" id="tocBtn">
+        <button className="btn" onClick={onShowToc}>
           <i className="fas fa-list"></i> Sumário
         </button>
         
