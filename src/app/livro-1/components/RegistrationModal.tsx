@@ -43,9 +43,10 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
     }
 
     const phoneRegex = /^\(?[1-9]{2}\)? ?9?[0-9]{4}-?[0-9]{4}$/
+    const cleanPhone = formData.phone.replace(/\D/g, '')
     if (!formData.phone) {
       newErrors.phone = 'Telefone é obrigatório'
-    } else if (!phoneRegex.test(formData.phone.replace(/\D/g, ''))) {
+    } else if (cleanPhone.length < 10 || cleanPhone.length > 11) {
       newErrors.phone = 'Telefone inválido'
     }
 
@@ -61,13 +62,12 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
     setIsLoading(true)
 
     try {
-      // Registrar usuário e compra
       const res = await fetch('/api/livro-1/registrar-acesso', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           ...formData,
-          productId: selectedProduct.id
+          productId: selectedProduct?.id
         })
       })
 
@@ -77,13 +77,8 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
         throw new Error(data.error || 'Erro ao registrar')
       }
 
-      // Abrir link do Mercado Pago
-      window.open(selectedProduct.mpLink, '_blank')
-
-      // Fechar modal
+      window.open(selectedProduct?.mpLink, '_blank')
       onClose()
-
-      // Redirecionar para página de agradecimento ou dashboard
       router.push('/obrigado')
 
     } catch (error: any) {
@@ -94,8 +89,8 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
   }
 
   return (
-    <div className="modal-overlay active">
-      <div className="modal registration-modal">
+    <div className="modal-overlay active" onClick={onClose}>
+      <div className="modal registration-modal" onClick={e => e.stopPropagation()}>
         <div className="modal-header">
           <h3>Cadastro Obrigatório</h3>
           <button className="close-modal" onClick={onClose}>

@@ -19,7 +19,6 @@ export default function BookViewer({
   const contentRef = useRef<HTMLDivElement>(null)
   const speechRef = useRef<SpeechSynthesisUtterance | null>(null)
 
-  // Narração
   useEffect(() => {
     if (isNarrating) {
       const text = contentRef.current?.innerText
@@ -50,7 +49,6 @@ export default function BookViewer({
     }
   }, [isNarrating, chapter, onNarrationEnd])
 
-  // Aplicar tamanho da fonte
   useEffect(() => {
     if (contentRef.current) {
       contentRef.current.style.fontSize = 

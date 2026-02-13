@@ -15,7 +15,11 @@ export default function DownloadMenu() {
   ]
 
   return (
-    <div className="menu-item" onMouseEnter={() => setIsOpen(true)} onMouseLeave={() => setIsOpen(false)}>
+    <div 
+      className="menu-item" 
+      onMouseEnter={() => setIsOpen(true)} 
+      onMouseLeave={() => setIsOpen(false)}
+    >
       <button className="menu-btn">
         <i className="fas fa-download"></i>
         <span>Downloads</span>

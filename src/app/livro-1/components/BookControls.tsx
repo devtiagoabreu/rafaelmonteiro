@@ -42,7 +42,7 @@ export default function BookControls({
           onClick={onPrevChapter}
           disabled={currentChapter === 0}
         >
-          <i className="fas fa-arrow-left"></i> Capítulo Anterior
+          <i className="fas fa-arrow-left"></i> Anterior
         </button>
         
         <button className="btn" id="tocBtn">
@@ -51,12 +51,12 @@ export default function BookControls({
         
         <button className="btn" onClick={onToggleNarration}>
           <i className={`fas ${isNarrating ? 'fa-pause' : 'fa-play'}`}></i> 
-          {isNarrating ? 'Pausar' : 'Narrar'} Capítulo
+          {isNarrating ? 'Pausar' : 'Narrar'}
         </button>
         
         <button className="btn" onClick={onToggleBookmark}>
           <i className={`fas ${isBookmarked ? 'fa-bookmark' : 'far fa-bookmark'}`}></i> 
-          {isBookmarked ? 'Desmarcar' : 'Marcar'} Página
+          {isBookmarked ? 'Desmarcar' : 'Marcar'}
         </button>
         
         <div className="font-controls">
@@ -74,7 +74,7 @@ export default function BookControls({
           onClick={onNextChapter}
           disabled={currentChapter === totalChapters - 1}
         >
-          Próximo Capítulo <i className="fas fa-arrow-right"></i>
+          Próximo <i className="fas fa-arrow-right"></i>
         </button>
       </div>
     </div>
