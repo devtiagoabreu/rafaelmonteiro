@@ -17,6 +17,7 @@
   --gray-300: #d4c4bf;
   --gray-400: #b8a29b;
   --gray-500: #9c837a;
+  --gray-600: #6b5a53;
   --success: #9f7e69;
   --gradient-1: linear-gradient(135deg, #9d4e7c 0%, #c49a6c 100%);
   --gradient-2: linear-gradient(135deg, #2c3e50 0%, #9d4e7c 100%);
@@ -27,7 +28,7 @@
   --shadow-hover: 0 30px 50px -12px rgba(157, 78, 124, 0.3);
 }
 
-/* Header Moderno */
+/* ===== HEADER MODERNO - COR CLARA ===== */
 .landing-header {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
@@ -125,10 +126,105 @@
   box-shadow: var(--shadow-hover);
 }
 
-/* Hero Section Romântico */
-.landing-hero {
-  background: var(--gradient-2);
+/* ===== BARRA DE REDES SOCIAIS LATERAL ===== */
+.social-sidebar {
+  position: fixed;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  z-index: 100;
+}
+
+.social-sidebar a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(5px);
+  color: rgba(157, 78, 124, 0.4);
+  font-size: 1.5rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(157, 78, 124, 0.2);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.social-sidebar a:hover {
+  color: var(--primary);
+  background: rgba(255, 255, 255, 0.9);
+  transform: translateX(5px) scale(1.1);
+  box-shadow: 0 10px 20px rgba(157, 78, 124, 0.2);
+  border-color: var(--primary);
+}
+
+/* ===== BOTÃO FLUTUANTE WHATSAPP ===== */
+.whatsapp-float {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 100;
+  animation: pulse 2s infinite;
+}
+
+.whatsapp-float a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #25d366, #128C7E);
   color: white;
+  font-size: 2.5rem;
+  text-decoration: none;
+  box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.whatsapp-float a::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.6s ease;
+}
+
+.whatsapp-float a:hover::before {
+  left: 100%;
+}
+
+.whatsapp-float a:hover {
+  transform: scale(1.15) rotate(5deg);
+  box-shadow: 0 15px 30px rgba(37, 211, 102, 0.6);
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+  }
+}
+
+/* ===== HERO SECTION - COR CLARA ===== */
+.landing-hero {
+  background: linear-gradient(135deg, var(--white), var(--gray-100));
+  color: var(--dark);
   padding: 100px 20px;
   position: relative;
   overflow: hidden;
@@ -141,7 +237,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.05"><path d="M20,50 Q35,30 50,50 T80,50" stroke="white" fill="none" stroke-width="1"/><path d="M30,60 Q45,40 60,60 T90,60" stroke="white" fill="none" stroke-width="1"/></svg>') repeat;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.03"><path d="M20,50 Q35,30 50,50 T80,50" stroke="%239d4e7c" fill="none" stroke-width="1"/><path d="M30,60 Q45,40 60,60 T90,60" stroke="%239d4e7c" fill="none" stroke-width="1"/></svg>') repeat;
   pointer-events: none;
 }
 
@@ -163,8 +259,7 @@
 }
 
 .landing-hero .badge {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(8px);
+  background: var(--gradient-1);
   color: white;
   padding: 8px 20px;
   border-radius: 40px;
@@ -175,7 +270,7 @@
   text-transform: uppercase;
   display: inline-block;
   width: fit-content;
-  border: 1px solid rgba(255,255,255,0.2);
+  box-shadow: var(--shadow-sm);
 }
 
 .landing-hero h1 {
@@ -184,13 +279,13 @@
   font-weight: 800;
   line-height: 1.1;
   margin: 0;
-  text-shadow: 2px 2px 20px rgba(0,0,0,0.3);
+  color: var(--dark);
 }
 
 .landing-hero .subtitle {
   font-family: 'Dancing Script', cursive;
   font-size: 2.5rem;
-  color: rgba(255,255,255,0.9);
+  color: var(--primary);
   font-weight: 400;
   margin-top: -10px;
 }
@@ -199,8 +294,8 @@
   font-family: 'Montserrat', sans-serif;
   font-size: 1.1rem;
   line-height: 1.8;
-  color: rgba(255,255,255,0.85);
-  border-left: 3px solid var(--secondary);
+  color: var(--gray-500);
+  border-left: 3px solid var(--primary);
   padding-left: 20px;
   font-weight: 300;
   letter-spacing: 0.3px;
@@ -259,22 +354,22 @@
 .landing-hero .btn-secondary {
   background: transparent;
   backdrop-filter: blur(8px);
-  color: white;
+  color: var(--dark);
   font-family: 'Montserrat', sans-serif;
   font-size: 1.1rem;
   font-weight: 500;
   padding: 16px 35px;
   border-radius: 50px;
   transition: all 0.3s ease;
-  border: 2px solid rgba(255,255,255,0.3);
+  border: 2px solid var(--primary-light);
   text-align: center;
   text-decoration: none;
   letter-spacing: 0.5px;
 }
 
 .landing-hero .btn-secondary:hover {
-  background: rgba(255,255,255,0.1);
-  border-color: white;
+  background: rgba(157, 78, 124, 0.05);
+  border-color: var(--primary);
   transform: translateY(-2px);
 }
 
@@ -283,7 +378,7 @@
   gap: 25px;
   flex-wrap: wrap;
   margin-top: 20px;
-  color: rgba(255,255,255,0.7);
+  color: var(--gray-500);
   font-family: 'Montserrat', sans-serif;
   font-size: 0.9rem;
 }
@@ -295,14 +390,13 @@
 }
 
 .landing-hero .hero-image {
-  background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-  backdrop-filter: blur(10px);
+  background: linear-gradient(135deg, var(--primary-light), var(--primary));
   border-radius: 30px;
   height: 550px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 30px 50px -20px rgba(0,0,0,0.5);
+  box-shadow: var(--shadow-lg);
   transition: all 0.5s ease;
   border: 1px solid rgba(255,255,255,0.2);
   position: relative;
@@ -321,12 +415,13 @@
 
 .landing-hero .hero-image:hover {
   transform: scale(1.02) translateY(-10px);
-  box-shadow: 0 40px 60px -20px rgba(0,0,0,0.6);
+  box-shadow: var(--shadow-hover);
 }
 
 .landing-hero .hero-image .image-placeholder {
   text-align: center;
   padding: 40px;
+  color: white;
 }
 
 .landing-hero .hero-image .image-placeholder .book-icon {
@@ -357,43 +452,7 @@
   opacity: 0.9;
 }
 
-@media (max-width: 768px) {
-  .landing-hero .container {
-    grid-template-columns: 1fr;
-    text-align: center;
-    gap: 40px;
-  }
-  
-  .landing-hero .badge {
-    margin: 0 auto;
-  }
-  
-  .landing-hero .description {
-    text-align: left;
-  }
-  
-  .landing-hero .cta-buttons {
-    justify-content: center;
-  }
-  
-  .landing-hero .trust-badges {
-    justify-content: center;
-  }
-  
-  .landing-hero h1 {
-    font-size: 3rem;
-  }
-  
-  .landing-hero .subtitle {
-    font-size: 2rem;
-  }
-  
-  .landing-hero .hero-image {
-    height: 400px;
-  }
-}
-
-/* Seção de Formatos */
+/* ===== SEÇÃO DE FORMATOS ===== */
 .formats-section {
   padding: 80px 0;
   background: linear-gradient(135deg, var(--white), var(--gray-100));
@@ -521,7 +580,7 @@
   max-width: 180px;
 }
 
-/* Seção de Comparação */
+/* ===== SEÇÃO DE COMPARAÇÃO ===== */
 .comparison-section {
   padding: 80px 0;
   background: linear-gradient(135deg, var(--gray-100), var(--white));
@@ -712,13 +771,115 @@
   box-shadow: var(--shadow-md);
 }
 
-@media (max-width: 640px) {
-  .comparison-grid {
-    grid-template-columns: 1fr;
-  }
+/* ===== SEÇÃO DE PERGUNTAS FREQUENTES ===== */
+.faq-section {
+  padding: 80px 0;
+  background: linear-gradient(135deg, var(--white), var(--gray-100));
+  position: relative;
 }
 
-/* Seção de Livros */
+.faq-section .container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.faq-section h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 15px;
+  color: var(--dark);
+  font-weight: 700;
+}
+
+.faq-section .section-description {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.2rem;
+  text-align: center;
+  color: var(--gray-500);
+  max-width: 700px;
+  margin: 0 auto 50px;
+  font-weight: 300;
+  line-height: 1.8;
+}
+
+.faq-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+}
+
+.faq-item {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease;
+  border: 1px solid var(--gray-200);
+  cursor: pointer;
+}
+
+.faq-item:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--primary-light);
+}
+
+.faq-question {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 0;
+  transition: margin-bottom 0.3s ease;
+}
+
+.faq-item.active .faq-question {
+  margin-bottom: 20px;
+}
+
+.faq-question .icon {
+  width: 40px;
+  height: 40px;
+  background: var(--gradient-1);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.faq-question h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--dark);
+  margin: 0;
+  flex: 1;
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  padding-left: 55px;
+}
+
+.faq-item.active .faq-answer {
+  max-height: 200px;
+}
+
+.faq-answer p {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 0.95rem;
+  color: var(--gray-500);
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* ===== CARDS DE LIVROS ===== */
 .books-section {
   padding: 80px 0;
   background: linear-gradient(135deg, var(--white), var(--gray-100));
@@ -750,7 +911,13 @@
   line-height: 1.8;
 }
 
-/* Cards de livros */
+.books-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+  margin: 30px 0;
+}
+
 .landing-book-card {
   display: flex;
   flex-direction: column;
@@ -940,7 +1107,7 @@
   box-shadow: var(--shadow-hover);
 }
 
-/* Combo em Destaque */
+/* ===== COMBO EM DESTAQUE ===== */
 .combo-highlight {
   margin-top: 60px;
   background: linear-gradient(135deg, var(--secondary), var(--secondary-dark));
@@ -1056,7 +1223,7 @@
   box-shadow: 0 25px 40px -10px rgba(0,0,0,0.4);
 }
 
-/* Seção de Garantia */
+/* ===== SEÇÃO DE GARANTIA ===== */
 .guarantee-section {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -1103,7 +1270,7 @@
   margin: 0 auto;
 }
 
-/* Footer */
+/* ===== FOOTER ===== */
 .landing-footer {
   background: linear-gradient(135deg, var(--dark), #1a2632);
   color: white;
@@ -1222,7 +1389,7 @@
   letter-spacing: 0.5px;
 }
 
-/* Animações */
+/* ===== UTILITÁRIOS E ANIMAÇÕES ===== */
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -1238,7 +1405,39 @@
   animation: fadeInUp 0.6s ease forwards;
 }
 
-/* Ajustes responsivos adicionais */
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background: var(--primary-light);
+  color: white;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--gray-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gradient-1);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-dark);
+}
+
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 1200px) {
+  .container-custom {
+    max-width: 95%;
+  }
+}
+
 @media (max-width: 992px) {
   .landing-hero h1 {
     font-size: 3rem;
@@ -1246,7 +1445,8 @@
   
   .formats-section h2,
   .comparison-section h2,
-  .books-section h2 {
+  .books-section h2,
+  .faq-section h2 {
     font-size: 2.5rem;
   }
   
@@ -1256,6 +1456,54 @@
   
   .combo-highlight .price {
     font-size: 4rem;
+  }
+  
+  .faq-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .landing-hero .container {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 40px;
+  }
+  
+  .landing-hero .badge {
+    margin: 0 auto;
+  }
+  
+  .landing-hero .description {
+    text-align: left;
+  }
+  
+  .landing-hero .cta-buttons {
+    justify-content: center;
+  }
+  
+  .landing-hero .trust-badges {
+    justify-content: center;
+  }
+  
+  .landing-hero h1 {
+    font-size: 3rem;
+  }
+  
+  .landing-hero .subtitle {
+    font-size: 2rem;
+  }
+  
+  .landing-hero .hero-image {
+    height: 400px;
+  }
+  
+  .comparison-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .social-sidebar {
+    display: none;
   }
 }
 
@@ -1276,7 +1524,8 @@
   
   .formats-section h2,
   .comparison-section h2,
-  .books-section h2 {
+  .books-section h2,
+  .faq-section h2 {
     font-size: 2rem;
   }
   
@@ -1304,33 +1553,10 @@
     font-size: 1.1rem;
     padding: 15px 30px;
   }
-}
-
-/* Estilo para links suaves */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Seleção de texto */
-::selection {
-  background: var(--primary-light);
-  color: white;
-}
-
-/* Scrollbar personalizada */
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--gray-100);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--gradient-1);
-  border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-dark);
+  
+  .whatsapp-float a {
+    width: 60px;
+    height: 60px;
+    font-size: 2rem;
+  }
 }

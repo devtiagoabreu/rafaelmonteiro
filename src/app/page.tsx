@@ -4,6 +4,9 @@ import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useState } from 'react'
 import RegistrationModal from '@/app/livro-1/components/RegistrationModal'
+import SocialSidebar from './components/SocialSidebar'
+import WhatsAppFloat from './components/WhatsAppFloat'
+import FaqSection from './components/FaqSection'
 import './landing.css'
 
 export default function HomePage() {
@@ -12,7 +15,6 @@ export default function HomePage() {
   const [selectedProduct, setSelectedProduct] = useState<any>(null)
 
   const handleFreeBookClick = () => {
-    // Livro 1 - grátis: sempre mostra modal de cadastro
     setSelectedProduct({
       id: 1,
       title: 'O Desejo Não Morre — Ele É Mal Cuidado',
@@ -24,11 +26,9 @@ export default function HomePage() {
 
   const handleBuyClick = (product: any) => {
     if (!session) {
-      // Não logado: mostra modal de cadastro
       setSelectedProduct(product)
       setShowRegistrationModal(true)
     } else {
-      // Logado: verifica se tem email antes de prosseguir
       const userEmail = session.user?.email
       if (!userEmail) {
         console.error('Email não encontrado na sessão')
@@ -37,10 +37,8 @@ export default function HomePage() {
       }
 
       if (product.id === 1) {
-        // Se for livro 1, vai direto para o livro
         window.location.href = '/livro-1'
       } else {
-        // Se for pago, chama a função de criar pagamento
         criarPagamentoMercadoPago(product, userEmail)
       }
     }
@@ -77,7 +75,13 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
-      {/* HEADER - usando classe landing-header */}
+      {/* Redes Sociais Laterais */}
+      <SocialSidebar />
+      
+      {/* WhatsApp Flutuante */}
+      <WhatsAppFloat phoneNumber="5519994559836" />
+
+      {/* HEADER */}
       <header className="landing-header">
         <div className="container">
           <div className="logo-area">
@@ -106,7 +110,7 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/* HERO SECTION - usando classe landing-hero */}
+      {/* HERO SECTION */}
       <section className="landing-hero">
         <div className="container">
           <div className="hero-content">
@@ -139,7 +143,6 @@ export default function HomePage() {
               </a>
             </div>
             
-            {/* Selos de Confiança */}
             <div className="trust-badges">
               <span>✓ Mais de 10.000 leitores</span>
               <span>✓ Acesso vitalício</span>
@@ -147,7 +150,6 @@ export default function HomePage() {
             </div>
           </div>
           
-          {/* Coluna da Direita - Imagem do Livro */}
           <div className="hero-image">
             <div className="image-placeholder">
               <span className="book-icon">📘</span>
@@ -206,7 +208,6 @@ export default function HomePage() {
           </p>
           
           <div className="comparison-grid">
-            {/* Card Livro 1 (Grátis) */}
             <div className="comparison-card free-card">
               <div className="card-header">
                 <span>GRÁTIS</span>
@@ -228,7 +229,6 @@ export default function HomePage() {
               </div>
             </div>
             
-            {/* Card Livros 2-5 */}
             <div className="comparison-card paid-card">
               <div className="card-header">
                 <span>Livros 2, 3, 4 e 5</span>
@@ -407,6 +407,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* SEÇÃO DE PERGUNTAS FREQUENTES */}
+      <FaqSection />
 
       {/* SEÇÃO DE GARANTIA */}
       <section className="py-12 bg-indigo-50">
