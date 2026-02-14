@@ -417,7 +417,7 @@ export default function HomePage() {
             <p className="text-lg opacity-90 mb-6">De R$ 191,60 • Economize R$ 161,70</p>
             <button
               onClick={() => handleBuyClick({
-                id: 'combo',
+                id: 6,
                 title: 'Pacote Completo',
                 price: 29.90
               })}

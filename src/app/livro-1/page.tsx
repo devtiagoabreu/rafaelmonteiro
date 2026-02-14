@@ -262,7 +262,7 @@ export default function Livro1Page() {
             <button 
               className="buy-btn special-price"
               onClick={() => handleBuyClick({
-                id: 'combo',
+                id: 6,
                 title: 'Pacote Completo',
                 price: 29.90,
                 mpLink: 'https://www.mercadopago.com.br/combo'
