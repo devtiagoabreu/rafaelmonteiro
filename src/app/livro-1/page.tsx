@@ -53,14 +53,22 @@ export default function Livro1Page() {
       return
     }
     
+    // Verificar se o email do usuário existe
+    const userEmail = session.user?.email
+    if (!userEmail) {
+      console.error('❌ Email do usuário não encontrado na sessão')
+      alert('Erro: email não encontrado. Tente fazer login novamente.')
+      return
+    }
+    
     // Usuário já está logado - criar pagamento direto
-    await criarPagamentoMercadoPago(product, session.user.email)
+    await criarPagamentoMercadoPago(product, userEmail)
   }
 
   // Função auxiliar para criar o pagamento
   const criarPagamentoMercadoPago = async (product: any, userEmail: string) => {
     try {
-      console.log('🔄 Criando preferência de pagamento...')
+      console.log('🔄 Criando preferência de pagamento para:', userEmail)
       
       const response = await fetch('/api/criar-preferencia', {
         method: 'POST',
