@@ -962,6 +962,7 @@ h1 {
   border-radius: 20px;
   font-weight: 600;
   font-size: 0.9rem;
+  margin-top: 5px;
 }
 
 .buy-btn {
@@ -986,12 +987,65 @@ h1 {
   transform: translateY(-2px);
 }
 
+/* Seção do Combo em Destaque */
+.combo-section {
+  text-align: center;
+  margin: 0 auto 50px auto;
+  padding: 40px;
+  background: linear-gradient(145deg, #10B981 0%, #059669 100%);
+  border-radius: 20px;
+  color: white;
+  max-width: 800px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+.combo-section h3 {
+  font-size: 2.2rem;
+  color: white;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.combo-section p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  opacity: 0.95;
+}
+
+.combo-price {
+  font-size: 4rem;
+  color: white;
+  font-weight: 800;
+  margin: 20px 0;
+  text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.combo-save {
+  color: rgba(255,255,255,0.9);
+  margin-bottom: 30px;
+  font-size: 1.1rem;
+}
+
+.combo-save s {
+  opacity: 0.8;
+}
+
+/* Botão especial para o combo */
 .special-price {
-  background: linear-gradient(145deg, #10B981 0%, #059669 100%) !important;
+  background: white !important;
+  color: #059669 !important;
+  font-size: 1.3rem !important;
+  padding: 18px 30px !important;
+  border-radius: 50px !important;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2) !important;
+  max-width: 400px;
+  margin: 0 auto !important;
 }
 
 .special-price:hover {
-  background: linear-gradient(145deg, #059669 0%, #047857 100%) !important;
+  background: #f0fdf4 !important;
+  transform: translateY(-3px) !important;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.3) !important;
 }
 
 /* Modal de cadastro */
@@ -1245,245 +1299,255 @@ h1 {
   transform: translateY(-2px);
 }
 
-/* Combo section */
-.combo-section {
-  text-align: center;
-  margin-top: 40px;
-  padding: 30px;
-  background: #f8fafc;
-  border-radius: 12px;
-}
-
-.combo-section h3 {
-  font-size: 1.9rem;
-  color: #2c3e50;
-  margin-bottom: 30px;
-  text-align: center;
-  font-weight: 700;
-}
-
-.combo-price {
-  font-size: 2.5rem;
-  color: #10B981;
-  font-weight: 700;
-  margin: 20px 0;
-}
-
-.combo-save {
-  color: #718096;
-  margin-bottom: 20px;
-}
-
 /* Responsividade */
 @media (max-width: 1200px) {
   .book-container {
-      height: 68vh;
+    height: 68vh;
   }
   
   .book-content {
-      padding: 35px;
+    padding: 35px;
   }
   
   .chapter-content {
-      padding: 0 20px;
+    padding: 0 20px;
   }
   
   h1 {
-      font-size: 2.6rem;
+    font-size: 2.6rem;
   }
 }
 
 @media (max-width: 992px) {
   .book-container {
-      height: 65vh;
-      min-height: 550px;
+    height: 65vh;
+    min-height: 550px;
   }
   
   .btn {
-      min-width: 160px;
-      padding: 12px 18px;
-      font-size: 1rem;
+    min-width: 160px;
+    padding: 12px 18px;
+    font-size: 1rem;
   }
   
   .font-controls {
-      padding: 10px 20px;
+    padding: 10px 20px;
   }
   
   .chapter-title {
-      font-size: 2rem;
+    font-size: 2rem;
   }
 }
 
 @media (max-width: 768px) {
+  body {
+    padding: 0;
+  }
+  
   .top-menu {
-      flex-direction: column;
-      gap: 15px;
-      padding: 15px;
+    flex-direction: column;
+    gap: 15px;
+    padding: 15px;
   }
   
   .top-menu-left, .top-menu-right {
-      width: 100%;
-      justify-content: center;
-      flex-wrap: wrap;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
   }
   
   .page-nav-top {
-      margin-left: 0;
+    margin-left: 0;
   }
   
   .book-container {
-      height: 60vh;
-      min-height: 500px;
+    height: 60vh;
+    min-height: 500px;
   }
   
   .book-content {
-      padding: 25px;
+    padding: 25px;
   }
   
   h1 {
-      font-size: 2.2rem;
+    font-size: 2.2rem;
   }
   
   .subtitle {
-      font-size: 1.2rem;
+    font-size: 1.2rem;
   }
   
   .controls {
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
   }
   
   .controls-wrapper {
-      flex-direction: column;
-      align-items: center;
+    flex-direction: column;
+    align-items: center;
   }
   
   .font-controls {
-      width: 100%;
-      justify-content: center;
+    width: 100%;
+    justify-content: center;
   }
   
   .chapter-title {
-      font-size: 1.8rem;
-      margin-bottom: 25px;
+    font-size: 1.8rem;
+    margin-bottom: 25px;
   }
   
   .chapter-content {
-      padding: 0;
+    padding: 0;
   }
   
   .chapter-content h3 {
-      font-size: 1.5rem;
+    font-size: 1.5rem;
   }
   
   .chapter-content p,
   .chapter-content li {
-      font-size: 1.1rem;
+    font-size: 1.1rem;
   }
   
   .nav-btn {
-      width: 55px;
-      height: 55px;
-      font-size: 1.6rem;
+    width: 55px;
+    height: 55px;
+    font-size: 1.6rem;
   }
   
   .page-counter {
-      font-size: 1.1rem;
-      padding: 12px 20px;
+    font-size: 1.1rem;
+    padding: 12px 20px;
   }
   
   .books-grid {
-      grid-template-columns: 1fr;
+    grid-template-columns: 1fr;
+  }
+  
+  .combo-section {
+    padding: 30px 20px;
+    margin: 0 15px 40px 15px;
+  }
+  
+  .combo-section h3 {
+    font-size: 1.8rem;
+  }
+  
+  .combo-price {
+    font-size: 3rem;
+  }
+  
+  .special-price {
+    font-size: 1.1rem !important;
+    padding: 15px 20px !important;
+    max-width: 300px;
   }
 }
 
 @media (max-width: 576px) {
   .book-container {
-      height: 55vh;
-      min-height: 450px;
+    height: 55vh;
+    min-height: 450px;
   }
   
   .book-content {
-      padding: 20px;
+    padding: 20px;
   }
   
   h1 {
-      font-size: 1.8rem;
+    font-size: 1.8rem;
   }
   
   .subtitle {
-      font-size: 1.1rem;
+    font-size: 1.1rem;
   }
   
   .chapter-title {
-      font-size: 1.6rem;
-      margin-bottom: 20px;
+    font-size: 1.6rem;
+    margin-bottom: 20px;
   }
   
   .chapter-content h3 {
-      font-size: 1.3rem;
+    font-size: 1.3rem;
   }
   
   .chapter-content p,
   .chapter-content li {
-      font-size: 1rem;
+    font-size: 1rem;
   }
   
   .btn {
-      min-width: 140px;
-      padding: 10px 15px;
-      font-size: 0.9rem;
+    min-width: 140px;
+    padding: 10px 15px;
+    font-size: 0.9rem;
   }
   
   .cover-page {
-      padding: 40px;
+    padding: 40px;
   }
   
   .cover-page h2 {
-      font-size: 2.5rem;
+    font-size: 2.5rem;
   }
   
   .cover-page .subtitle {
-      font-size: 1.5rem;
+    font-size: 1.5rem;
   }
   
   .cover-page .author {
-      font-size: 1.4rem;
-      margin-top: 40px;
+    font-size: 1.4rem;
+    margin-top: 40px;
   }
   
   .dedication-page {
-      padding: 40px;
+    padding: 40px;
   }
   
   .dedication-page p {
-      font-size: 1.3rem;
+    font-size: 1.3rem;
   }
   
   .narration-indicator,
   .notification {
-      bottom: 20px;
-      right: 20px;
-      top: auto;
-      padding: 15px 20px;
-      font-size: 0.9rem;
+    bottom: 20px;
+    right: 20px;
+    top: auto;
+    padding: 15px 20px;
+    font-size: 0.9rem;
   }
   
   .modal {
-      width: 95%;
+    width: 95%;
   }
   
   .modal-content {
-      padding: 20px;
+    padding: 20px;
   }
   
   .form-actions {
-      flex-direction: column;
+    flex-direction: column;
   }
   
   .btn-primary,
   .btn-secondary {
-      width: 100%;
+    width: 100%;
+  }
+  
+  .combo-section {
+    padding: 25px 15px;
+  }
+  
+  .combo-section h3 {
+    font-size: 1.5rem;
+  }
+  
+  .combo-price {
+    font-size: 2.5rem;
+  }
+  
+  .combo-save {
+    font-size: 0.9rem;
   }
 }

@@ -47,13 +47,11 @@ export default function Livro1Page() {
     console.log('🛒 Produto selecionado:', product)
     setSelectedProduct(product)
     
-    // Se não estiver logado, mostra modal de cadastro
     if (!session) {
       setShowRegistrationModal(true)
       return
     }
     
-    // Verificar se o email do usuário existe
     const userEmail = session.user?.email
     if (!userEmail) {
       console.error('❌ Email do usuário não encontrado na sessão')
@@ -61,11 +59,9 @@ export default function Livro1Page() {
       return
     }
     
-    // Usuário já está logado - criar pagamento direto
     await criarPagamentoMercadoPago(product, userEmail)
   }
 
-  // Função auxiliar para criar o pagamento
   const criarPagamentoMercadoPago = async (product: any, userEmail: string) => {
     try {
       console.log('🔄 Criando preferência de pagamento para:', userEmail)
@@ -85,7 +81,6 @@ export default function Livro1Page() {
       console.log('✅ Preferência criada:', data)
       
       if (data.init_point) {
-        // Redirecionar para o Mercado Pago
         window.location.href = data.init_point
       } else {
         console.error('❌ Erro: init_point não recebido', data)
@@ -255,7 +250,29 @@ export default function Livro1Page() {
               <i className="fas fa-arrow-left"></i> Voltar para o Livro
             </button>
           </div>
-          
+
+          {/* PACOTE COMPLETO - DESTAQUE NO TOPO */}
+          <div className="combo-section">
+            <h3>Pacote Completo com Super Desconto</h3>
+            <p>Adquira todos os 4 próximos livros com um desconto especial!</p>
+            <div className="combo-price">R$ 29,90</div>
+            <div className="combo-save">
+              <s>De R$ 191,60</s> • Economize R$ 161,70
+            </div>
+            <button 
+              className="buy-btn special-price"
+              onClick={() => handleBuyClick({
+                id: 'combo',
+                title: 'Pacote Completo',
+                price: 29.90,
+                mpLink: 'https://www.mercadopago.com.br/combo'
+              })}
+            >
+              <i className="fas fa-gift"></i> Comprar Pacote Completo
+            </button>
+          </div>
+
+          {/* GRID DE LIVROS INDIVIDUAIS */}
           <div className="books-grid">
             {/* Livro 2 */}
             <div className="book-card">
@@ -273,14 +290,17 @@ export default function Livro1Page() {
                 <div className="price">
                   <div className="old-price">R$ 47,90</div>
                   <div className="new-price">R$ 9,90</div>
-                  <span className="discount-badge">-79,33% de desconto</span>
+                  <span className="discount-badge">79,33% de desconto</span>
                 </div>
-                <button className="buy-btn" onClick={() => handleBuyClick({
-                  id: 2,
-                  title: 'Por Que Você Se Atrai Sempre Pelo Mesmo Tipo de Pessoa',
-                  price: 9.90,
-                  mpLink: 'https://mpago.la/2uEEC7R'
-                })}>
+                <button 
+                  className="buy-btn"
+                  onClick={() => handleBuyClick({
+                    id: 2,
+                    title: 'Por Que Você Se Atrai Sempre Pelo Mesmo Tipo de Pessoa',
+                    price: 9.90,
+                    mpLink: 'https://www.mercadopago.com.br/book2'
+                  })}
+                >
                   Comprar Agora
                 </button>
               </div>
@@ -302,14 +322,17 @@ export default function Livro1Page() {
                 <div className="price">
                   <div className="old-price">R$ 47,90</div>
                   <div className="new-price">R$ 9,90</div>
-                  <span className="discount-badge">-79,33% de desconto</span>
+                  <span className="discount-badge">79,33% de desconto</span>
                 </div>
-                <button className="buy-btn" onClick={() => handleBuyClick({
-                  id: 3,
-                  title: 'Ciúme, Insegurança e Medo de Perder',
-                  price: 9.90,
-                  mpLink: 'https://www.mercadopago.com.br/book3'
-                })}>
+                <button 
+                  className="buy-btn"
+                  onClick={() => handleBuyClick({
+                    id: 3,
+                    title: 'Ciúme, Insegurança e Medo de Perder',
+                    price: 9.90,
+                    mpLink: 'https://www.mercadopago.com.br/book3'
+                  })}
+                >
                   Comprar Agora
                 </button>
               </div>
@@ -332,14 +355,17 @@ export default function Livro1Page() {
                 <div className="price">
                   <div className="old-price">R$ 47,90</div>
                   <div className="new-price">R$ 9,90</div>
-                  <span className="discount-badge">-79,33% de desconto</span>
+                  <span className="discount-badge">79,33% de desconto</span>
                 </div>
-                <button className="buy-btn" onClick={() => handleBuyClick({
-                  id: 4,
-                  title: 'Quando o Amor Vira Dependência',
-                  price: 9.90,
-                  mpLink: 'https://www.mercadopago.com.br/book4'
-                })}>
+                <button 
+                  className="buy-btn"
+                  onClick={() => handleBuyClick({
+                    id: 4,
+                    title: 'Quando o Amor Vira Dependência',
+                    price: 9.90,
+                    mpLink: 'https://www.mercadopago.com.br/book4'
+                  })}
+                >
                   Comprar Agora
                 </button>
               </div>
@@ -361,33 +387,21 @@ export default function Livro1Page() {
                 <div className="price">
                   <div className="old-price">R$ 47,90</div>
                   <div className="new-price">R$ 9,90</div>
-                  <span className="discount-badge">-79,33% de desconto</span>
+                  <span className="discount-badge">79,33% de desconto</span>
                 </div>
-                <button className="buy-btn" onClick={() => handleBuyClick({
-                  id: 5,
-                  title: 'Relacionamentos Conscientes',
-                  price: 9.90,
-                  mpLink: 'https://www.mercadopago.com.br/book5'
-                })}>
+                <button 
+                  className="buy-btn"
+                  onClick={() => handleBuyClick({
+                    id: 5,
+                    title: 'Relacionamentos Conscientes',
+                    price: 9.90,
+                    mpLink: 'https://www.mercadopago.com.br/book5'
+                  })}
+                >
                   Comprar Agora
                 </button>
               </div>
             </div>
-          </div>
-          
-          <div className="combo-section">
-            <h3>Pacote Completo com Super Desconto</h3>
-            <p>Adquira todos os 4 próximos livros com um desconto especial!</p>
-            <div className="combo-price">R$ 29,90</div>
-            <div className="combo-save">De R$ 191,60 • Economize R$ 161,70</div>
-            <button className="buy-btn special-price" onClick={() => handleBuyClick({
-              id: 'combo',
-              title: 'Pacote Completo',
-              price: 29.90,
-              mpLink: 'https://www.mercadopago.com.br/combo'
-            })}>
-              <i className="fas fa-gift"></i> Comprar Pacote Completo
-            </button>
           </div>
         </div>
       )}
