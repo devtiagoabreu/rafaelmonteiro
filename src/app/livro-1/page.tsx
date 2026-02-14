@@ -43,14 +43,49 @@ export default function Livro1Page() {
     localStorage.setItem('fontSize', fontSize)
   }, [fontSize])
 
-  const handleBuyClick = (product: any) => {
-    console.log('Produto selecionado:', product)
+  const handleBuyClick = async (product: any) => {
+    console.log('🛒 Produto selecionado:', product)
     setSelectedProduct(product)
+    
+    // Se não estiver logado, mostra modal de cadastro
     if (!session) {
       setShowRegistrationModal(true)
-    } else {
-      // Usuário já logado, redirecionar para compra
-      window.open(product.mpLink, '_blank')
+      return
+    }
+    
+    // Usuário já está logado - criar pagamento direto
+    await criarPagamentoMercadoPago(product, session.user.email)
+  }
+
+  // Função auxiliar para criar o pagamento
+  const criarPagamentoMercadoPago = async (product: any, userEmail: string) => {
+    try {
+      console.log('🔄 Criando preferência de pagamento...')
+      
+      const response = await fetch('/api/criar-preferencia', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          productId: product.id.toString(),
+          userEmail: userEmail,
+          productTitle: product.title,
+          productPrice: product.price
+        })
+      })
+      
+      const data = await response.json()
+      console.log('✅ Preferência criada:', data)
+      
+      if (data.init_point) {
+        // Redirecionar para o Mercado Pago
+        window.location.href = data.init_point
+      } else {
+        console.error('❌ Erro: init_point não recebido', data)
+        alert('Erro ao criar pagamento. Tente novamente.')
+      }
+    } catch (error) {
+      console.error('❌ Erro ao criar pagamento:', error)
+      alert('Erro ao conectar com Mercado Pago. Tente novamente.')
     }
   }
 

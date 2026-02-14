@@ -39,10 +39,9 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
     }
 
     if (formData.email !== formData.confirmEmail) {
-      newErrors.confirmEmail = 'Emails não coincidem'
+      newErrors.confirmEmail = 'Os emails não coincidem'
     }
 
-    const phoneRegex = /^\(?[1-9]{2}\)? ?9?[0-9]{4}-?[0-9]{4}$/
     const cleanPhone = formData.phone.replace(/\D/g, '')
     if (!formData.phone) {
       newErrors.phone = 'Telefone é obrigatório'
@@ -54,6 +53,19 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
     return Object.keys(newErrors).length === 0
   }
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target
+    setFormData(prev => ({ ...prev, [id]: value }))
+    // Limpar erro do campo quando começar a digitar
+    if (errors[id]) {
+      setErrors(prev => {
+        const newErrors = { ...prev }
+        delete newErrors[id]
+        return newErrors
+      })
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
@@ -63,11 +75,12 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
     setErrors({})
 
     try {
-      console.log('Enviando dados:', {
+      console.log('📝 Enviando dados de cadastro:', {
         ...formData,
         productId: selectedProduct?.id
       })
 
+      // 1. Registrar usuário no sistema
       const res = await fetch('/api/livro-1/registrar-acesso', {
         method: 'POST',
         headers: { 
@@ -83,40 +96,56 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
       })
 
       const data = await res.json()
-      console.log('Resposta da API:', data)
+      console.log('✅ Resposta do cadastro:', data)
 
       if (!res.ok) {
         throw new Error(data.error || `Erro ${res.status}: ${res.statusText}`)
       }
 
-      // Sucesso - abrir link do Mercado Pago
-      if (selectedProduct?.mpLink) {
-        window.open(selectedProduct.mpLink, '_blank')
-      }
-      
+      // 2. Fechar modal de cadastro
       onClose()
       
-      // Mostrar mensagem de sucesso
-      alert('Cadastro realizado com sucesso! Você será redirecionado para o pagamento.')
+      // 3. Criar preferência no Mercado Pago
+      try {
+        console.log('🔄 Criando preferência no Mercado Pago...')
+        
+        const preferenceResponse = await fetch('/api/criar-preferencia', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            productId: selectedProduct?.id?.toString() || '',
+            userEmail: formData.email,
+            productTitle: selectedProduct?.title || 'Livro',
+            productPrice: selectedProduct?.price || 29.90
+          })
+        })
+
+        const preferenceData = await preferenceResponse.json()
+        console.log('✅ Preferência criada:', preferenceData)
+
+        if (preferenceData.init_point) {
+          // Redirecionar para o Mercado Pago
+          window.location.href = preferenceData.init_point
+        } else {
+          // Fallback: abrir link antigo em nova aba
+          console.warn('⚠️ init_point não recebido, usando link de fallback')
+          if (selectedProduct?.mpLink) {
+            window.open(selectedProduct.mpLink, '_blank')
+          }
+        }
+      } catch (mpError) {
+        console.error('❌ Erro ao criar preferência:', mpError)
+        // Fallback: abrir link antigo
+        if (selectedProduct?.mpLink) {
+          window.open(selectedProduct.mpLink, '_blank')
+        }
+      }
 
     } catch (error: any) {
-      console.error('Erro no cadastro:', error)
+      console.error('❌ Erro no cadastro:', error)
       setErrors({ submit: error.message || 'Erro ao processar cadastro. Tente novamente.' })
     } finally {
       setIsLoading(false)
-    }
-  }
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target
-    setFormData(prev => ({ ...prev, [id]: value }))
-    // Limpar erro do campo quando começar a digitar
-    if (errors[id]) {
-      setErrors(prev => {
-        const newErrors = { ...prev }
-        delete newErrors[id]
-        return newErrors
-      })
     }
   }
 
@@ -137,7 +166,13 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
           </div>
 
           {errors.submit && (
-            <div className="error-message show" style={{ marginBottom: '20px', color: '#EF4444', background: '#FEE2E2', padding: '10px', borderRadius: '4px' }}>
+            <div className="error-message show" style={{ 
+              marginBottom: '20px', 
+              color: '#EF4444', 
+              background: '#FEE2E2', 
+              padding: '10px', 
+              borderRadius: '4px' 
+            }}>
               {errors.submit}
             </div>
           )}
@@ -152,6 +187,7 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
                 onChange={handleInputChange}
                 className={errors.fullName ? 'error' : ''}
                 disabled={isLoading}
+                placeholder="Digite seu nome completo"
               />
               {errors.fullName && <div className="error-message show">{errors.fullName}</div>}
             </div>
@@ -165,6 +201,7 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
                 onChange={handleInputChange}
                 className={errors.email ? 'error' : ''}
                 disabled={isLoading}
+                placeholder="seu@email.com"
               />
               {errors.email && <div className="error-message show">{errors.email}</div>}
             </div>
@@ -178,6 +215,7 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
                 onChange={handleInputChange}
                 className={errors.confirmEmail ? 'error' : ''}
                 disabled={isLoading}
+                placeholder="confirme seu email"
               />
               {errors.confirmEmail && <div className="error-message show">{errors.confirmEmail}</div>}
             </div>
@@ -197,10 +235,19 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
             </div>
 
             <div className="form-actions">
-              <button type="button" className="btn-secondary" onClick={onClose} disabled={isLoading}>
+              <button 
+                type="button" 
+                className="btn-secondary" 
+                onClick={onClose} 
+                disabled={isLoading}
+              >
                 Cancelar
               </button>
-              <button type="submit" className="btn-primary" disabled={isLoading}>
+              <button 
+                type="submit" 
+                className="btn-primary" 
+                disabled={isLoading}
+              >
                 {isLoading ? 'Processando...' : 'Confirmar Cadastro'}
               </button>
             </div>
