@@ -272,13 +272,13 @@ export default function Livro1Page() {
                 </ul>
                 <div className="price">
                   <div className="old-price">R$ 47,90</div>
-                  <div className="new-price">R$ 1,00</div>
-                  <span className="discount-badge">-38% de desconto</span>
+                  <div className="new-price">R$ 9,90</div>
+                  <span className="discount-badge">-79,33% de desconto</span>
                 </div>
                 <button className="buy-btn" onClick={() => handleBuyClick({
                   id: 2,
                   title: 'Por Que Você Se Atrai Sempre Pelo Mesmo Tipo de Pessoa',
-                  price: 1.00,
+                  price: 9.90,
                   mpLink: 'https://mpago.la/2uEEC7R'
                 })}>
                   Comprar Agora
@@ -301,13 +301,13 @@ export default function Livro1Page() {
                 </ul>
                 <div className="price">
                   <div className="old-price">R$ 47,90</div>
-                  <div className="new-price">R$ 1,00</div>
-                  <span className="discount-badge">-38% de desconto</span>
+                  <div className="new-price">R$ 9,90</div>
+                  <span className="discount-badge">-79,33% de desconto</span>
                 </div>
                 <button className="buy-btn" onClick={() => handleBuyClick({
                   id: 3,
                   title: 'Ciúme, Insegurança e Medo de Perder',
-                  price: 1.00,
+                  price: 9.90,
                   mpLink: 'https://www.mercadopago.com.br/book3'
                 })}>
                   Comprar Agora
@@ -325,18 +325,19 @@ export default function Livro1Page() {
                 <ul>
                   <li><i className="fas fa-check"></i> A linha entre amar e se anular</li>
                   <li><i className="fas fa-check"></i> Sinais de dependência emocional</li>
+                  <li><i className="fas fa-check"></i> A Solidão como Aliada, não como Inimiga</li>
                   <li><i className="fas fa-check"></i> Recuperando sua autonomia</li>
                   <li><i className="fas fa-check"></i> Amor saudável vs. apego doentio</li>
                 </ul>
                 <div className="price">
                   <div className="old-price">R$ 47,90</div>
-                  <div className="new-price">R$ 1,00</div>
-                  <span className="discount-badge">-38% de desconto</span>
+                  <div className="new-price">R$ 9,90</div>
+                  <span className="discount-badge">-79,33% de desconto</span>
                 </div>
                 <button className="buy-btn" onClick={() => handleBuyClick({
                   id: 4,
                   title: 'Quando o Amor Vira Dependência',
-                  price: 1.00,
+                  price: 9.90,
                   mpLink: 'https://www.mercadopago.com.br/book4'
                 })}>
                   Comprar Agora
@@ -359,13 +360,13 @@ export default function Livro1Page() {
                 </ul>
                 <div className="price">
                   <div className="old-price">R$ 47,90</div>
-                  <div className="new-price">R$ 29,90</div>
-                  <span className="discount-badge">-38% de desconto</span>
+                  <div className="new-price">R$ 9,90</div>
+                  <span className="discount-badge">-79,33% de desconto</span>
                 </div>
                 <button className="buy-btn" onClick={() => handleBuyClick({
                   id: 5,
                   title: 'Relacionamentos Conscientes',
-                  price: 1.00,
+                  price: 9.90,
                   mpLink: 'https://www.mercadopago.com.br/book5'
                 })}>
                   Comprar Agora
@@ -377,12 +378,12 @@ export default function Livro1Page() {
           <div className="combo-section">
             <h3>Pacote Completo com Super Desconto</h3>
             <p>Adquira todos os 4 próximos livros com um desconto especial!</p>
-            <div className="combo-price">R$ 89,90</div>
-            <div className="combo-save">De R$ 191,60 • Economize R$ 101,70</div>
+            <div className="combo-price">R$ 29,90</div>
+            <div className="combo-save">De R$ 191,60 • Economize R$ 161,70</div>
             <button className="buy-btn special-price" onClick={() => handleBuyClick({
               id: 'combo',
               title: 'Pacote Completo',
-              price: 89.90,
+              price: 29.90,
               mpLink: 'https://www.mercadopago.com.br/combo'
             })}>
               <i className="fas fa-gift"></i> Comprar Pacote Completo
