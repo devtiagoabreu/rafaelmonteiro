@@ -17,7 +17,6 @@ export async function POST(request: Request) {
     
     const { resource, topic } = body
     
-    // CASO 1: Notificação de payment (resource já é o ID)
     if (topic === 'payment') {
       const paymentId = resource
       
@@ -30,7 +29,6 @@ export async function POST(request: Request) {
       await processarPagamento(paymentId)
     }
     
-    // CASO 2: Notificação de merchant_order (resource é uma URL)
     else if (topic === 'merchant_order' && resource) {
       console.log('📦 Processando merchant_order:', resource)
       
@@ -109,10 +107,10 @@ async function processarPagamento(paymentId: string | number) {
     // DETERMINAR QUAL PRODUTO FOI COMPRADO
     let productId = payment.metadata?.product_id
     let isCombo = false
-    let amount = payment.transaction_amount
     
     // Se não veio na metadata, tenta identificar pelo valor
     if (!productId) {
+      const amount = payment.transaction_amount
       console.log(`💰 Valor do pagamento: ${amount}`)
       
       if (amount === 1 || amount === 1.00) {
@@ -124,20 +122,22 @@ async function processarPagamento(paymentId: string | number) {
         })
         productId = product?.id
       } else if (amount === 29.90) {
-        // COMBO DETECTADO!
+        // COMBO DETECTADO - ID 6
+        productId = '6'
         isCombo = true
-        console.log('🎁 COMBO DETECTADO! Processando 4 livros...')
+        console.log('🎁 COMBO DETECTADO! ID 6 - Processando livros 2, 3, 4 e 5...')
       }
     } else {
-      // Verifica se o productId é do combo
+      // Verifica se o productId é do combo (id 6)
       const product = await prisma.product.findUnique({
         where: { id: productId }
       })
       isCombo = product?.isCombo || false
+      console.log(`📦 Produto ID: ${productId}, é combo? ${isCombo}`)
     }
     
-    // PROCESSAMENTO DO COMBO (4 livros)
-    if (isCombo) {
+    // PROCESSAMENTO DO COMBO (ID 6 - libera livros 2, 3, 4, 5)
+    if (isCombo || productId === '6') {
       console.log('📦 Processando COMBO - Liberando livros 2, 3, 4 e 5')
       
       // Buscar os IDs dos livros 2, 3, 4 e 5
@@ -149,9 +149,11 @@ async function processarPagamento(paymentId: string | number) {
       
       console.log(`📚 Encontrados ${livrosCombo.length} livros para o combo`)
       
+      const resultados = []
+      
       // Para cada livro, criar ou atualizar o registro
       for (const livro of livrosCombo) {
-        await prisma.userProduct.upsert({
+        const result = await prisma.userProduct.upsert({
           where: {
             userId_productId: {
               userId: user.id,
@@ -171,23 +173,48 @@ async function processarPagamento(paymentId: string | number) {
         })
         
         console.log(`✅ Livro ${livro.bookNumber} (${livro.title}) processado`)
+        resultados.push(livro.bookNumber)
       }
       
-      // 📧 ENVIAR E-MAILS DE CONFIRMAÇÃO
+      // 🔥 AGORA TAMBÉM REGISTRA O PRÓPRIO COMBO (opcional)
+      // Isso mantém o registro de que o usuário comprou o combo
+      await prisma.userProduct.upsert({
+        where: {
+          userId_productId: {
+            userId: user.id,
+            productId: '6'
+          }
+        },
+        update: {
+          paymentStatus: 'paid',
+          mpPaymentId: paymentId.toString()
+        },
+        create: {
+          userId: user.id,
+          productId: '6',
+          paymentStatus: 'paid',
+          mpPaymentId: paymentId.toString()
+        }
+      })
+      
+      console.log(`🎁 Registro do combo ID 6 também salvo`)
+      console.log(`🎉 COMBO finalizado! Livros liberados: ${resultados.join(', ')} para ${email}`)
+      
+      // Enviar e-mails de confirmação
+      const comboProduct = await prisma.product.findUnique({
+        where: { id: '6' }
+      })
+      
       await sendPaymentConfirmationEmails({
         userEmail: email,
         userName: user.fullName,
         userPhone: user.phone || 'Não informado',
-        product: { 
-          title: 'Pacote Completo - Jornada Relacionamentos Conscientes', 
-          price: 29.90 
-        },
+        product: comboProduct || { title: 'Pacote Completo', price: 29.90 },
         paymentId: paymentId.toString(),
         isCombo: true,
         books: livrosCombo,
       })
       
-      console.log(`🎉 COMBO finalizado! 4 livros liberados para ${email}`)
       return
     }
     
@@ -228,15 +255,12 @@ async function processarPagamento(paymentId: string | number) {
     console.log(`✅ Pagamento ${paymentId} processado para ${email}`)
     console.log(`📊 ID do registro: ${result.id}`)
     
-    // 📧 ENVIAR E-MAILS DE CONFIRMAÇÃO PARA LIVRO INDIVIDUAL
+    // Enviar e-mails de confirmação para livro individual
     await sendPaymentConfirmationEmails({
       userEmail: email,
       userName: user.fullName,
       userPhone: user.phone || 'Não informado',
-      product: {
-        title: product.title,
-        price: product.price
-      },
+      product,
       paymentId: paymentId.toString(),
       isCombo: false,
       books: [],
@@ -250,6 +274,6 @@ async function processarPagamento(paymentId: string | number) {
 export async function GET() {
   return NextResponse.json({ 
     message: 'Webhook endpoint ready for POST requests',
-    note: 'Processa notificações dos tipos payment e merchant_order e envia e-mails'
+    note: 'Processa notificações dos tipos payment e merchant_order'
   })
 }
