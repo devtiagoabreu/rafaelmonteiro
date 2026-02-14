@@ -419,7 +419,7 @@ export default function HomePage() {
               onClick={() => handleBuyClick({
                 id: 6,
                 title: 'Pacote Completo',
-                price: 0.01
+                price: 1.00
               })}
               className="bg-white text-green-700 hover:bg-green-50 px-12 py-4 rounded-full text-xl font-bold transition transform hover:scale-105 shadow-xl"
             >
