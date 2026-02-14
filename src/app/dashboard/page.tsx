@@ -30,13 +30,21 @@ export default async function DashboardPage() {
     redirect('/login')
   }
 
-  // Filtrar apenas produtos pagos
+  // 🔴 FILTRAR APENAS LIVROS INDIVIDUAIS (bookNumber entre 1 e 5)
+  // Excluir o combo (bookNumber null, isCombo true)
   const purchasedProducts = user.products
     .filter(up => up.paymentStatus === 'paid')
     .map(up => up.product)
+    .filter(product => product.bookNumber && product.bookNumber >= 1 && product.bookNumber <= 5)
+    .sort((a, b) => (a.bookNumber || 0) - (b.bookNumber || 0)) // Ordenar por número do livro
 
-  // Verificar se há produtos pendentes
+  // Verificar se há produtos pendentes (incluindo combo)
   const pendingProducts = user.products.filter(up => up.paymentStatus === 'pending')
+
+  // Verificar se o usuário tem o combo (para fins de informação)
+  const hasCombo = user.products.some(
+    up => up.paymentStatus === 'paid' && up.product.isCombo
+  )
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -75,7 +83,7 @@ export default async function DashboardPage() {
           </div>
         )}
 
-        {/* Seção de Acesso Rápido - Links Importantes */}
+        {/* Seção de Acesso Rápido */}
         <div className="mb-10">
           <h2 className="text-2xl font-bold mb-4 text-gray-800">Acesso Rápido</h2>
           <div className="grid md:grid-cols-2 gap-6">
@@ -125,6 +133,16 @@ export default async function DashboardPage() {
         {purchasedProducts.length > 0 ? (
           <>
             <h2 className="text-2xl font-bold mb-4 text-gray-800">Sua Coleção</h2>
+            
+            {/* 🔴 AVISO DO COMBO (se tiver) */}
+            {hasCombo && (
+              <div className="bg-green-50 border-l-4 border-green-500 p-4 mb-4 rounded-lg">
+                <p className="text-sm text-green-700">
+                  <strong>🎁 Você possui o Pacote Completo!</strong> Todos os livros abaixo estão liberados.
+                </p>
+              </div>
+            )}
+            
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {purchasedProducts.map((product) => (
                 <div key={product.id} className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition">
