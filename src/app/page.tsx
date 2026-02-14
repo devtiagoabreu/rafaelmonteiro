@@ -2,7 +2,6 @@
 
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { useState } from 'react'
 import RegistrationModal from '@/app/livro-1/components/RegistrationModal'
 
@@ -21,7 +20,8 @@ export default function HomePage() {
         id: 1,
         title: 'O Desejo Não Morre — Ele É Mal Cuidado',
         price: 0,
-        mpLink: '/livro-1' // Redireciona para o livro após cadastro
+        isFree: true,
+        redirectUrl: '/livro-1'
       })
       setShowRegistrationModal(true)
     }

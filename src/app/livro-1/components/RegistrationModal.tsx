@@ -101,13 +101,18 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
 
       onClose()
       
-      // Se for o livro 1 (grátis), redireciona direto
-      if (selectedProduct?.id === 1 || selectedProduct?.price === 0) {
+      // 🔴 LÓGICA CORRIGIDA:
+      // Se for produto grátis (id=1 ou price=0 ou isFree=true)
+      if (selectedProduct?.id === 1 || selectedProduct?.price === 0 || selectedProduct?.isFree) {
+        console.log('📘 Produto grátis - redirecionando para o livro')
         router.push('/livro-1')
       } else {
-        // Se for pago, abre o link do Mercado Pago
+        // Se for produto pago, abre link do Mercado Pago
+        console.log('💳 Produto pago - abrindo link de pagamento')
         if (selectedProduct?.mpLink) {
           window.open(selectedProduct.mpLink, '_blank')
+        } else {
+          console.error('❌ Link de pagamento não encontrado')
         }
       }
 
@@ -120,7 +125,7 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
   }
 
   // Determinar se é produto grátis ou pago
-  const isFree = selectedProduct?.price === 0 || selectedProduct?.id === 1
+  const isFree = selectedProduct?.price === 0 || selectedProduct?.id === 1 || selectedProduct?.isFree
 
   return (
     <div className="modal-overlay active" onClick={onClose}>
