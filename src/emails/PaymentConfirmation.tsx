@@ -1,4 +1,3 @@
-// src/emails/PaymentConfirmation.tsx
 import {
   Body,
   Container,
@@ -55,13 +54,14 @@ export const PaymentConfirmationEmail = ({
                 <Text style={booksList}>
                   📚 Livros inclusos:
                   {books.map((book, index) => (
-                    <span key={index} style={bookItem}>
+                    <span key={index} style={bookItem as React.CSSProperties}>
                       {book}
                     </span>
                   ))}
                 </Text>
               )}
-              <Text style={productPrice}>Valor: R$ {productPrice}</Text>
+              {/* CORREÇÃO: productPrice é usado como conteúdo, não como style */}
+              <Text style={productPriceStyle}>Valor: R$ {productPrice}</Text>
             </Section>
 
             <Text style={paragraph}>
@@ -96,14 +96,14 @@ export const PaymentConfirmationEmail = ({
   );
 };
 
-// Estilos
-const main = {
+// Estilos (agora com nomes únicos para evitar conflitos)
+const main: React.CSSProperties = {
   backgroundColor: '#f6f9fc',
   fontFamily:
     '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
 };
 
-const container = {
+const container: React.CSSProperties = {
   backgroundColor: '#ffffff',
   margin: '0 auto',
   padding: '20px 0 48px',
@@ -111,75 +111,76 @@ const container = {
   maxWidth: '600px',
 };
 
-const headerSection = {
+const headerSection: React.CSSProperties = {
   backgroundColor: '#4f46e5',
   padding: '30px',
   textAlign: 'center' as const,
 };
 
-const h1 = {
+const h1: React.CSSProperties = {
   color: '#ffffff',
   fontSize: '32px',
   fontWeight: 'bold',
   margin: '0',
 };
 
-const contentSection = {
+const contentSection: React.CSSProperties = {
   padding: '30px',
 };
 
-const greeting = {
+const greeting: React.CSSProperties = {
   fontSize: '20px',
   fontWeight: 'bold',
   marginBottom: '20px',
 };
 
-const paragraph = {
+const paragraph: React.CSSProperties = {
   fontSize: '16px',
   lineHeight: '26px',
   marginBottom: '20px',
   color: '#333',
 };
 
-const productBox = {
+const productBox: React.CSSProperties = {
   backgroundColor: '#f3f4f6',
   borderRadius: '8px',
   padding: '20px',
   marginBottom: '25px',
 };
 
-const productTitle = {
+const productTitle: React.CSSProperties = {
   fontSize: '18px',
   fontWeight: 'bold',
   marginBottom: '10px',
   color: '#4f46e5',
 };
 
-const booksList = {
+const booksList: React.CSSProperties = {
   fontSize: '15px',
   lineHeight: '24px',
   marginBottom: '10px',
 };
 
-const bookItem = {
+const bookItem: React.CSSProperties = {
   display: 'block',
   marginLeft: '15px',
   color: '#4b5563',
 };
 
-const productPrice = {
+// CORREÇÃO: Nome diferente para não conflitar com a prop
+const productPriceStyle: React.CSSProperties = {
   fontSize: '16px',
   fontWeight: 'bold',
   color: '#10b981',
 };
 
-const buttonSection = {
+const buttonSection: React.CSSProperties = {
   textAlign: 'center' as const,
   marginTop: '30px',
   marginBottom: '30px',
 };
 
-const button = {
+const button: React.CSSProperties = {
   backgroundColor: '#4f46e5',
   borderRadius: '5px',
   color: '#fff',
@@ -191,18 +192,18 @@ const button = {
   padding: '15px 30px',
 };
 
-const paragraphSmall = {
+const paragraphSmall: React.CSSProperties = {
   fontSize: '14px',
   color: '#6b7280',
   marginTop: '20px',
 };
 
-const hr = {
+const hr: React.CSSProperties = {
   borderColor: '#e5e7eb',
   margin: '30px 0',
 };
 
-const footer = {
+const footer: React.CSSProperties = {
   color: '#8898aa',
   fontSize: '12px',
   lineHeight: '16px',

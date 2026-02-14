@@ -1,4 +1,3 @@
-// src/emails/AdminNotification.tsx
 import {
   Body,
   Container,
@@ -73,13 +72,13 @@ export const AdminNotificationEmail = ({
 };
 
 // Estilos
-const main = {
+const main: React.CSSProperties = {
   backgroundColor: '#f6f9fc',
   fontFamily:
     '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
 };
 
-const container = {
+const container: React.CSSProperties = {
   backgroundColor: '#ffffff',
   margin: '0 auto',
   padding: '20px 0 48px',
@@ -87,43 +86,43 @@ const container = {
   maxWidth: '600px',
 };
 
-const headerSection = {
+const headerSection: React.CSSProperties = {
   backgroundColor: '#10b981',
   padding: '30px',
   textAlign: 'center' as const,
 };
 
-const h1 = {
+const h1: React.CSSProperties = {
   color: '#ffffff',
   fontSize: '28px',
   fontWeight: 'bold',
   margin: '0',
 };
 
-const contentSection = {
+const contentSection: React.CSSProperties = {
   padding: '30px',
 };
 
-const subheading = {
+const subheading: React.CSSProperties = {
   fontSize: '18px',
   fontWeight: 'bold',
   marginBottom: '15px',
   color: '#333',
 };
 
-const info = {
+const info: React.CSSProperties = {
   fontSize: '15px',
   lineHeight: '24px',
   marginBottom: '8px',
   color: '#4b5563',
 };
 
-const hr = {
+const hr: React.CSSProperties = {
   borderColor: '#e5e7eb',
   margin: '25px 0',
 };
 
-const footer = {
+const footer: React.CSSProperties = {
   color: '#8898aa',
   fontSize: '12px',
   lineHeight: '16px',
