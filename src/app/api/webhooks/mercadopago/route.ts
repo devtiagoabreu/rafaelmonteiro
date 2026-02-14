@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { Payment, MerchantOrder } from 'mercadopago'
 import { prisma } from '@/lib/prisma'
 import { MercadoPagoConfig } from 'mercadopago'
+import { sendPaymentConfirmationEmails } from '@/lib/email-service'
 
 const client = new MercadoPagoConfig({ 
   accessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN! 
@@ -108,10 +109,10 @@ async function processarPagamento(paymentId: string | number) {
     // DETERMINAR QUAL PRODUTO FOI COMPRADO
     let productId = payment.metadata?.product_id
     let isCombo = false
+    let amount = payment.transaction_amount
     
     // Se não veio na metadata, tenta identificar pelo valor
     if (!productId) {
-      const amount = payment.transaction_amount
       console.log(`💰 Valor do pagamento: ${amount}`)
       
       if (amount === 1 || amount === 1.00) {
@@ -150,7 +151,7 @@ async function processarPagamento(paymentId: string | number) {
       
       // Para cada livro, criar ou atualizar o registro
       for (const livro of livrosCombo) {
-        const result = await prisma.userProduct.upsert({
+        await prisma.userProduct.upsert({
           where: {
             userId_productId: {
               userId: user.id,
@@ -172,6 +173,20 @@ async function processarPagamento(paymentId: string | number) {
         console.log(`✅ Livro ${livro.bookNumber} (${livro.title}) processado`)
       }
       
+      // 📧 ENVIAR E-MAILS DE CONFIRMAÇÃO
+      await sendPaymentConfirmationEmails({
+        userEmail: email,
+        userName: user.fullName,
+        userPhone: user.phone || 'Não informado',
+        product: { 
+          title: 'Pacote Completo - Jornada Relacionamentos Conscientes', 
+          price: 29.90 
+        },
+        paymentId: paymentId.toString(),
+        isCombo: true,
+        books: livrosCombo,
+      })
+      
       console.log(`🎉 COMBO finalizado! 4 livros liberados para ${email}`)
       return
     }
@@ -179,6 +194,15 @@ async function processarPagamento(paymentId: string | number) {
     // PROCESSAMENTO DE LIVRO INDIVIDUAL
     if (!productId) {
       console.log('❌ Product ID não identificado')
+      return
+    }
+    
+    const product = await prisma.product.findUnique({
+      where: { id: productId }
+    })
+    
+    if (!product) {
+      console.log(`❌ Produto não encontrado: ${productId}`)
       return
     }
     
@@ -204,6 +228,20 @@ async function processarPagamento(paymentId: string | number) {
     console.log(`✅ Pagamento ${paymentId} processado para ${email}`)
     console.log(`📊 ID do registro: ${result.id}`)
     
+    // 📧 ENVIAR E-MAILS DE CONFIRMAÇÃO PARA LIVRO INDIVIDUAL
+    await sendPaymentConfirmationEmails({
+      userEmail: email,
+      userName: user.fullName,
+      userPhone: user.phone || 'Não informado',
+      product: {
+        title: product.title,
+        price: product.price
+      },
+      paymentId: paymentId.toString(),
+      isCombo: false,
+      books: [],
+    })
+    
   } catch (error) {
     console.error(`🔴 Erro ao processar pagamento ${paymentId}:`, error)
   }
@@ -212,6 +250,6 @@ async function processarPagamento(paymentId: string | number) {
 export async function GET() {
   return NextResponse.json({ 
     message: 'Webhook endpoint ready for POST requests',
-    note: 'Processa notificações dos tipos payment e merchant_order'
+    note: 'Processa notificações dos tipos payment e merchant_order e envia e-mails'
   })
 }
