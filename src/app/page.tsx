@@ -2,13 +2,25 @@
 
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import RegistrationModal from '@/app/livro-1/components/RegistrationModal'
 
 export default function HomePage() {
   const { data: session } = useSession()
   const [showRegistrationModal, setShowRegistrationModal] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<any>(null)
+
+  // Verificar se há uma compra pendente (vinda do modal de cadastro)
+  useEffect(() => {
+    const pendingPurchase = localStorage.getItem('pendingPurchase')
+    if (pendingPurchase) {
+      const { product, userEmail } = JSON.parse(pendingPurchase)
+      localStorage.removeItem('pendingPurchase')
+      
+      // Executar a compra
+      criarPagamentoMercadoPago(product, userEmail)
+    }
+  }, [])
 
   const handleFreeBookClick = () => {
     // Livro 1 - grátis: sempre mostra modal de cadastro
@@ -295,6 +307,7 @@ export default function HomePage() {
                   <li className="flex items-start gap-2">✓ Padrões inconscientes de atração</li>
                   <li className="flex items-start gap-2">✓ Carência emocional e escolhas repetidas</li>
                   <li className="flex items-start gap-2">✓ Como quebrar ciclos destrutivos</li>
+                  <li className="flex items-start gap-2">✓ Exercícios para autoconhecimento</li>
                 </ul>
                 <div className="text-center mb-4">
                   <span className="text-gray-400 line-through text-sm">R$ 47,90</span>
@@ -325,6 +338,7 @@ export default function HomePage() {
                   <li className="flex items-start gap-2">✓ Origens emocionais do ciúme</li>
                   <li className="flex items-start gap-2">✓ Como reconstruir segurança emocional</li>
                   <li className="flex items-start gap-2">✓ Técnicas para lidar com a insegurança</li>
+                  <li className="flex items-start gap-2">✓ Autoconfiança nos relacionamentos</li>
                 </ul>
                 <div className="text-center mb-4">
                   <span className="text-gray-400 line-through text-sm">R$ 47,90</span>
@@ -355,6 +369,7 @@ export default function HomePage() {
                   <li className="flex items-start gap-2">✓ A linha entre amar e se anular</li>
                   <li className="flex items-start gap-2">✓ Sinais de dependência emocional</li>
                   <li className="flex items-start gap-2">✓ Recuperando sua autonomia</li>
+                  <li className="flex items-start gap-2">✓ Amor saudável vs. apego doentio</li>
                 </ul>
                 <div className="text-center mb-4">
                   <span className="text-gray-400 line-through text-sm">R$ 47,90</span>
@@ -385,6 +400,7 @@ export default function HomePage() {
                   <li className="flex items-start gap-2">✓ Como amar sem se perder</li>
                   <li className="flex items-start gap-2">✓ Comunicação não violenta</li>
                   <li className="flex items-start gap-2">✓ Limites saudáveis</li>
+                  <li className="flex items-start gap-2">✓ Intimidade emocional madura</li>
                 </ul>
                 <div className="text-center mb-4">
                   <span className="text-gray-400 line-through text-sm">R$ 47,90</span>
