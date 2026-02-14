@@ -1,7 +1,10 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-export async function GET(request: Request) {
+// FORÇAR A ROTA A SER DINÂMICA (NÃO PRÉ-RENDERIZADA)
+export const dynamic = 'force-dynamic'
+
+export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const email = searchParams.get('email')
@@ -12,6 +15,8 @@ export async function GET(request: Request) {
         { status: 400 }
       )
     }
+
+    console.log(`🔍 Verificando usuário: ${email}`)
 
     // Buscar usuário
     const user = await prisma.user.findUnique({
@@ -41,9 +46,9 @@ export async function GET(request: Request) {
     })
 
   } catch (error) {
-    console.error('Erro ao verificar usuário:', error)
+    console.error('🔴 Erro ao verificar usuário:', error)
     return NextResponse.json(
-      { error: 'Erro interno' },
+      { error: 'Erro interno ao verificar usuário' },
       { status: 500 }
     )
   }
