@@ -1,6 +1,5 @@
-// src/lib/email-service.ts
 import { render } from '@react-email/components';
-import { sendEmail } from './email'; // ← caminho correto: ./email (mesma pasta)
+import { sendEmail } from './email';
 import PaymentConfirmationEmail from '@/emails/PaymentConfirmation';
 import AdminNotificationEmail from '@/emails/AdminNotification';
 
@@ -35,9 +34,9 @@ export async function sendPaymentConfirmationEmails({
 
     const bookTitles = books.map(book => `• ${book.title} (Livro ${book.bookNumber})`);
 
-    // E-mail para o cliente
+    // 🔴 CORREÇÃO: await no render (é assíncrono)
     console.log(`📧 Gerando e-mail para cliente: ${userEmail}`);
-    const clientEmailHtml = render(
+    const clientEmailHtml = await render(
       PaymentConfirmationEmail({
         userName,
         productName: product.title,
@@ -53,12 +52,12 @@ export async function sendPaymentConfirmationEmails({
       subject: isCombo 
         ? '🎁 Seu pacote completo foi liberado!' 
         : '✅ Seu livro foi liberado!',
-      html: clientEmailHtml,
+      html: clientEmailHtml, // Agora é string, não Promise
     });
 
-    // E-mail para o administrador
+    // 🔴 CORREÇÃO: await no render do admin também
     console.log(`📧 Gerando e-mail para administrador: ${process.env.ADMIN_EMAIL}`);
-    const adminEmailHtml = render(
+    const adminEmailHtml = await render(
       AdminNotificationEmail({
         userName,
         userEmail,
@@ -77,7 +76,7 @@ export async function sendPaymentConfirmationEmails({
     const adminResult = await sendEmail({
       to: process.env.ADMIN_EMAIL!,
       subject: `💰 Nova venda: ${product.title}`,
-      html: adminEmailHtml,
+      html: adminEmailHtml, // Agora é string, não Promise
     });
 
     console.log(`📧 E-mails processados - Cliente: ${clientResult.success ? '✅' : '❌'}, Admin: ${adminResult.success ? '✅' : '❌'}`);
