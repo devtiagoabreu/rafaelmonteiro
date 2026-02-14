@@ -97,7 +97,7 @@ export default function HomePage() {
                   className="bg-yellow-500 hover:bg-yellow-600 text-yellow-900 font-bold text-xl px-8 py-4 rounded-full shadow-2xl hover:shadow-3xl transition transform hover:scale-105 flex items-center justify-center gap-3"
                 >
                   <span className="text-2xl">📘</span>
-                  Baixar Grátis - Livro 1
+                  Acesse Grátis - Livro 1
                 </button>
                 
                 <a 
@@ -245,7 +245,7 @@ export default function HomePage() {
                   onClick={handleFreeBookClick}
                   className="w-full bg-yellow-500 hover:bg-yellow-600 text-yellow-900 font-bold py-3 rounded-lg transition"
                 >
-                  Baixar Grátis
+                  Acesso Grátis
                 </button>
               </div>
             </div>
