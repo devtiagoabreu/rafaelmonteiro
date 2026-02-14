@@ -18,7 +18,7 @@ export async function POST(request: Request) {
     
     // CASO 1: Notificação de payment (resource já é o ID)
     if (topic === 'payment') {
-      const paymentId = resource // resource já é o ID direto
+      const paymentId = resource
       
       if (!paymentId) {
         console.log('⚠️ ID do pagamento não encontrado em payment')
@@ -33,7 +33,6 @@ export async function POST(request: Request) {
     else if (topic === 'merchant_order' && resource) {
       console.log('📦 Processando merchant_order:', resource)
       
-      // Extrair o ID da merchant_order da URL
       const orderId = resource.split('/').pop()
       
       if (!orderId) {
@@ -41,7 +40,6 @@ export async function POST(request: Request) {
         return NextResponse.json({ received: true })
       }
       
-      // Buscar detalhes da merchant_order
       const merchantOrder = await new MerchantOrder(client).get({ 
         merchantOrderId: orderId 
       })
@@ -52,15 +50,11 @@ export async function POST(request: Request) {
         payments: merchantOrder.payments
       })
       
-      // Processar cada pagamento dentro da ordem
       if (merchantOrder.payments && merchantOrder.payments.length > 0) {
         for (const paymentInfo of merchantOrder.payments) {
           const paymentId = paymentInfo.id
           
-          if (!paymentId) {
-            console.log('⚠️ Pagamento sem ID encontrado, pulando...')
-            continue
-          }
+          if (!paymentId) continue
           
           if (paymentInfo.status === 'approved') {
             console.log(`💰 Processando pagamento ${paymentId} da merchant_order`)
@@ -78,7 +72,7 @@ export async function POST(request: Request) {
   }
 }
 
-// Função auxiliar para processar um pagamento específico
+// Função principal que processa cada pagamento
 async function processarPagamento(paymentId: string | number) {
   try {
     console.log(`🔄 Buscando detalhes do pagamento ${paymentId}`)
@@ -111,34 +105,83 @@ async function processarPagamento(paymentId: string | number) {
       return
     }
     
-    // Determinar productId
+    // DETERMINAR QUAL PRODUTO FOI COMPRADO
     let productId = payment.metadata?.product_id
+    let isCombo = false
     
+    // Se não veio na metadata, tenta identificar pelo valor
     if (!productId) {
       const amount = payment.transaction_amount
       console.log(`💰 Valor do pagamento: ${amount}`)
       
       if (amount === 1 || amount === 1.00) {
         productId = '2' // Livro 2 (teste)
-      } else if (amount === 29.90) {
+      } else if (amount === 9.90) {
+        // Identificar qual livro tem esse preço (todos os individuais)
         const product = await prisma.product.findFirst({
           where: { price: amount, isCombo: false }
         })
         productId = product?.id
-      } else if (amount === 89.90) {
-        const product = await prisma.product.findFirst({
-          where: { isCombo: true }
-        })
-        productId = product?.id
+      } else if (amount === 29.90) {
+        // COMBO DETECTADO!
+        isCombo = true
+        console.log('🎁 COMBO DETECTADO! Processando 4 livros...')
       }
+    } else {
+      // Verifica se o productId é do combo
+      const product = await prisma.product.findUnique({
+        where: { id: productId }
+      })
+      isCombo = product?.isCombo || false
     }
     
+    // PROCESSAMENTO DO COMBO (4 livros)
+    if (isCombo) {
+      console.log('📦 Processando COMBO - Liberando livros 2, 3, 4 e 5')
+      
+      // Buscar os IDs dos livros 2, 3, 4 e 5
+      const livrosCombo = await prisma.product.findMany({
+        where: {
+          bookNumber: { in: [2, 3, 4, 5] }
+        }
+      })
+      
+      console.log(`📚 Encontrados ${livrosCombo.length} livros para o combo`)
+      
+      // Para cada livro, criar ou atualizar o registro
+      for (const livro of livrosCombo) {
+        const result = await prisma.userProduct.upsert({
+          where: {
+            userId_productId: {
+              userId: user.id,
+              productId: livro.id
+            }
+          },
+          update: {
+            paymentStatus: 'paid',
+            mpPaymentId: paymentId.toString()
+          },
+          create: {
+            userId: user.id,
+            productId: livro.id,
+            paymentStatus: 'paid',
+            mpPaymentId: paymentId.toString()
+          }
+        })
+        
+        console.log(`✅ Livro ${livro.bookNumber} (${livro.title}) processado`)
+      }
+      
+      console.log(`🎉 COMBO finalizado! 4 livros liberados para ${email}`)
+      return
+    }
+    
+    // PROCESSAMENTO DE LIVRO INDIVIDUAL
     if (!productId) {
       console.log('❌ Product ID não identificado')
       return
     }
     
-    // Atualizar ou criar o registro de compra
     const result = await prisma.userProduct.upsert({
       where: {
         userId_productId: {
