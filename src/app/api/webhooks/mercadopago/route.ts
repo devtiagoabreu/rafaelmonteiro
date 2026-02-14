@@ -16,8 +16,21 @@ export async function POST(request: Request) {
     
     const { resource, topic } = body
     
-    // Se for uma merchant_order (ordem de pagamento)
-    if (topic === 'merchant_order' && resource) {
+    // CASO 1: Notificação de payment (resource já é o ID)
+    if (topic === 'payment') {
+      const paymentId = resource // resource já é o ID direto
+      
+      if (!paymentId) {
+        console.log('⚠️ ID do pagamento não encontrado em payment')
+        return NextResponse.json({ received: true })
+      }
+      
+      console.log(`💰 Processando pagamento direto ID: ${paymentId}`)
+      await processarPagamento(paymentId)
+    }
+    
+    // CASO 2: Notificação de merchant_order (resource é uma URL)
+    else if (topic === 'merchant_order' && resource) {
       console.log('📦 Processando merchant_order:', resource)
       
       // Extrair o ID da merchant_order da URL
@@ -39,10 +52,9 @@ export async function POST(request: Request) {
         payments: merchantOrder.payments
       })
       
-      // A merchant_order pode ter múltiplos pagamentos
+      // Processar cada pagamento dentro da ordem
       if (merchantOrder.payments && merchantOrder.payments.length > 0) {
         for (const paymentInfo of merchantOrder.payments) {
-          // CORREÇÃO: Verificar se paymentInfo.id existe e é válido
           const paymentId = paymentInfo.id
           
           if (!paymentId) {
@@ -50,80 +62,9 @@ export async function POST(request: Request) {
             continue
           }
           
-          console.log(`💰 Processando pagamento ${paymentId} com status ${paymentInfo.status}`)
-          
           if (paymentInfo.status === 'approved') {
-            try {
-              // Buscar detalhes completos do pagamento
-              const payment = await new Payment(client).get({ id: paymentId })
-              
-              const email = payment.external_reference || payment.payer?.email
-              console.log('📧 Email:', email)
-              console.log('📦 Metadata:', payment.metadata)
-              
-              if (email) {
-                const user = await prisma.user.findUnique({
-                  where: { email }
-                })
-                
-                if (user) {
-                  // Determinar productId (da metadata ou do valor)
-                  let productId = payment.metadata?.product_id
-                  
-                  if (!productId) {
-                    const amount = payment.transaction_amount
-                    console.log(`💰 Valor do pagamento: ${amount}`)
-                    
-                    if (amount === 1 || amount === 1.00) {
-                      productId = '2' // Livro 2 (teste)
-                    } else if (amount === 29.90) {
-                      const product = await prisma.product.findFirst({
-                        where: { price: amount, isCombo: false }
-                      })
-                      productId = product?.id
-                    } else if (amount === 89.90) {
-                      const product = await prisma.product.findFirst({
-                        where: { isCombo: true }
-                      })
-                      productId = product?.id
-                    }
-                  }
-                  
-                  if (productId) {
-                    await prisma.userProduct.upsert({
-                      where: {
-                        userId_productId: {
-                          userId: user.id,
-                          productId: productId
-                        }
-                      },
-                      update: {
-                        paymentStatus: 'paid',
-                        mpPaymentId: paymentId.toString()
-                      },
-                      create: {
-                        userId: user.id,
-                        productId: productId,
-                        paymentStatus: 'paid',
-                        mpPaymentId: paymentId.toString()
-                      }
-                    })
-                    
-                    console.log(`✅ Pagamento ${paymentId} processado para ${email}`)
-                  } else {
-                    console.log('❌ Product ID não identificado')
-                  }
-                } else {
-                  console.log(`❌ Usuário não encontrado: ${email}`)
-                }
-              } else {
-                console.log('❌ Email não encontrado no pagamento')
-              }
-            } catch (paymentError) {
-              console.error(`🔴 Erro ao buscar pagamento ${paymentId}:`, paymentError)
-            }
-          } else {
-            console.log(`⏳ Pagamento ${paymentId} com status ${paymentInfo.status} - ignorado`)
+            console.log(`💰 Processando pagamento ${paymentId} da merchant_order`)
+            await processarPagamento(paymentId)
           }
         }
       }
@@ -137,8 +78,97 @@ export async function POST(request: Request) {
   }
 }
 
+// Função auxiliar para processar um pagamento específico
+async function processarPagamento(paymentId: string | number) {
+  try {
+    console.log(`🔄 Buscando detalhes do pagamento ${paymentId}`)
+    
+    const payment = await new Payment(client).get({ id: paymentId })
+    
+    console.log('📊 Status do pagamento:', payment.status)
+    console.log('📧 Email:', payment.payer?.email)
+    console.log('🔗 External reference:', payment.external_reference)
+    console.log('📦 Metadata:', payment.metadata)
+    
+    if (payment.status !== 'approved') {
+      console.log(`⏳ Pagamento ${paymentId} não está aprovado (${payment.status})`)
+      return
+    }
+    
+    const email = payment.external_reference || payment.payer?.email
+    
+    if (!email) {
+      console.log('❌ Email não encontrado no pagamento')
+      return
+    }
+    
+    const user = await prisma.user.findUnique({
+      where: { email }
+    })
+    
+    if (!user) {
+      console.log(`❌ Usuário não encontrado: ${email}`)
+      return
+    }
+    
+    // Determinar productId
+    let productId = payment.metadata?.product_id
+    
+    if (!productId) {
+      const amount = payment.transaction_amount
+      console.log(`💰 Valor do pagamento: ${amount}`)
+      
+      if (amount === 1 || amount === 1.00) {
+        productId = '2' // Livro 2 (teste)
+      } else if (amount === 29.90) {
+        const product = await prisma.product.findFirst({
+          where: { price: amount, isCombo: false }
+        })
+        productId = product?.id
+      } else if (amount === 89.90) {
+        const product = await prisma.product.findFirst({
+          where: { isCombo: true }
+        })
+        productId = product?.id
+      }
+    }
+    
+    if (!productId) {
+      console.log('❌ Product ID não identificado')
+      return
+    }
+    
+    // Atualizar ou criar o registro de compra
+    const result = await prisma.userProduct.upsert({
+      where: {
+        userId_productId: {
+          userId: user.id,
+          productId: productId
+        }
+      },
+      update: {
+        paymentStatus: 'paid',
+        mpPaymentId: paymentId.toString()
+      },
+      create: {
+        userId: user.id,
+        productId: productId,
+        paymentStatus: 'paid',
+        mpPaymentId: paymentId.toString()
+      }
+    })
+    
+    console.log(`✅ Pagamento ${paymentId} processado para ${email}`)
+    console.log(`📊 ID do registro: ${result.id}`)
+    
+  } catch (error) {
+    console.error(`🔴 Erro ao processar pagamento ${paymentId}:`, error)
+  }
+}
+
 export async function GET() {
   return NextResponse.json({ 
-    message: 'Webhook endpoint ready for POST requests' 
+    message: 'Webhook endpoint ready for POST requests',
+    note: 'Processa notificações dos tipos payment e merchant_order'
   })
 }
