@@ -1,4 +1,3 @@
-// src/app/api/webhooks/mercadopago/route.ts
 import { NextResponse } from 'next/server'
 import { Payment, MerchantOrder } from 'mercadopago'
 import { prisma } from '@/lib/prisma'
@@ -43,67 +42,88 @@ export async function POST(request: Request) {
       // A merchant_order pode ter múltiplos pagamentos
       if (merchantOrder.payments && merchantOrder.payments.length > 0) {
         for (const paymentInfo of merchantOrder.payments) {
+          // CORREÇÃO: Verificar se paymentInfo.id existe e é válido
           const paymentId = paymentInfo.id
+          
+          if (!paymentId) {
+            console.log('⚠️ Pagamento sem ID encontrado, pulando...')
+            continue
+          }
+          
           console.log(`💰 Processando pagamento ${paymentId} com status ${paymentInfo.status}`)
           
           if (paymentInfo.status === 'approved') {
-            // Buscar detalhes completos do pagamento
-            const payment = await new Payment(client).get({ id: paymentId })
-            
-            const email = payment.external_reference || payment.payer?.email
-            console.log('📧 Email:', email)
-            console.log('📦 Metadata:', payment.metadata)
-            
-            if (email) {
-              const user = await prisma.user.findUnique({
-                where: { email }
-              })
+            try {
+              // Buscar detalhes completos do pagamento
+              const payment = await new Payment(client).get({ id: paymentId })
               
-              if (user) {
-                // Determinar productId (da metadata ou do valor)
-                let productId = payment.metadata?.product_id
+              const email = payment.external_reference || payment.payer?.email
+              console.log('📧 Email:', email)
+              console.log('📦 Metadata:', payment.metadata)
+              
+              if (email) {
+                const user = await prisma.user.findUnique({
+                  where: { email }
+                })
                 
-                if (!productId) {
-                  const amount = payment.transaction_amount
-                  if (amount === 1 || amount === 1.00) {
-                    productId = '2' // Livro 2 (teste)
-                  } else if (amount === 29.90) {
-                    const product = await prisma.product.findFirst({
-                      where: { price: amount, isCombo: false }
-                    })
-                    productId = product?.id
-                  } else if (amount === 89.90) {
-                    const product = await prisma.product.findFirst({
-                      where: { isCombo: true }
-                    })
-                    productId = product?.id
-                  }
-                }
-                
-                if (productId) {
-                  await prisma.userProduct.upsert({
-                    where: {
-                      userId_productId: {
-                        userId: user.id,
-                        productId: productId
-                      }
-                    },
-                    update: {
-                      paymentStatus: 'paid',
-                      mpPaymentId: paymentId.toString()
-                    },
-                    create: {
-                      userId: user.id,
-                      productId: productId,
-                      paymentStatus: 'paid',
-                      mpPaymentId: paymentId.toString()
-                    }
-                  })
+                if (user) {
+                  // Determinar productId (da metadata ou do valor)
+                  let productId = payment.metadata?.product_id
                   
-                  console.log(`✅ Pagamento ${paymentId} processado para ${email}`)
+                  if (!productId) {
+                    const amount = payment.transaction_amount
+                    console.log(`💰 Valor do pagamento: ${amount}`)
+                    
+                    if (amount === 1 || amount === 1.00) {
+                      productId = '2' // Livro 2 (teste)
+                    } else if (amount === 29.90) {
+                      const product = await prisma.product.findFirst({
+                        where: { price: amount, isCombo: false }
+                      })
+                      productId = product?.id
+                    } else if (amount === 89.90) {
+                      const product = await prisma.product.findFirst({
+                        where: { isCombo: true }
+                      })
+                      productId = product?.id
+                    }
+                  }
+                  
+                  if (productId) {
+                    await prisma.userProduct.upsert({
+                      where: {
+                        userId_productId: {
+                          userId: user.id,
+                          productId: productId
+                        }
+                      },
+                      update: {
+                        paymentStatus: 'paid',
+                        mpPaymentId: paymentId.toString()
+                      },
+                      create: {
+                        userId: user.id,
+                        productId: productId,
+                        paymentStatus: 'paid',
+                        mpPaymentId: paymentId.toString()
+                      }
+                    })
+                    
+                    console.log(`✅ Pagamento ${paymentId} processado para ${email}`)
+                  } else {
+                    console.log('❌ Product ID não identificado')
+                  }
+                } else {
+                  console.log(`❌ Usuário não encontrado: ${email}`)
                 }
+              } else {
+                console.log('❌ Email não encontrado no pagamento')
               }
+            } catch (paymentError) {
+              console.error(`🔴 Erro ao buscar pagamento ${paymentId}:`, paymentError)
             }
+          } else {
+            console.log(`⏳ Pagamento ${paymentId} com status ${paymentInfo.status} - ignorado`)
           }
         }
       }
