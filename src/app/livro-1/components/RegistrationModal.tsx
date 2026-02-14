@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 interface RegistrationModalProps {
@@ -19,6 +19,18 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isLoading, setIsLoading] = useState(false)
+
+  // Prevenir scroll do body quando modal está aberto
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isOpen])
 
   if (!isOpen) return null
 
@@ -101,7 +113,6 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
 
       onClose()
       
-      // 🔴 LÓGICA CORRIGIDA:
       // Se for produto grátis (id=1 ou price=0 ou isFree=true)
       if (selectedProduct?.id === 1 || selectedProduct?.price === 0 || selectedProduct?.isFree) {
         console.log('📘 Produto grátis - redirecionando para o livro')
@@ -128,16 +139,47 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
   const isFree = selectedProduct?.price === 0 || selectedProduct?.id === 1 || selectedProduct?.isFree
 
   return (
-    <div className="modal-overlay active" onClick={onClose}>
-      <div className="modal registration-modal" onClick={e => e.stopPropagation()} style={{ maxWidth: '550px' }}>
-        {/* HEADER DO MODAL - GRADIENTE BONITO */}
-        <div className="modal-header" style={{
+    <div 
+      className="modal-overlay active" 
+      onClick={onClose}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 9999,
+        padding: '20px'
+      }}
+    >
+      <div 
+        className="modal registration-modal" 
+        onClick={e => e.stopPropagation()}
+        style={{
+          maxWidth: '550px',
+          width: '100%',
+          maxHeight: 'calc(100vh - 40px)',
+          backgroundColor: 'white',
+          borderRadius: '20px',
+          overflow: 'hidden',
+          boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+          display: 'flex',
+          flexDirection: 'column'
+        }}
+      >
+        {/* HEADER DO MODAL - FIXO */}
+        <div style={{
           background: isFree 
             ? 'linear-gradient(145deg, #10B981 0%, #059669 100%)' 
             : 'linear-gradient(145deg, #4f46e5 0%, #7c3aed 100%)',
-          padding: '30px 30px 40px 30px',
+          padding: '24px 30px',
           position: 'relative',
-          overflow: 'hidden'
+          overflow: 'hidden',
+          flexShrink: 0
         }}>
           {/* Elementos decorativos de fundo */}
           <div style={{
@@ -160,58 +202,62 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
           }} />
           
           <div style={{ position: 'relative', zIndex: 2 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 {isFree ? (
                   <span style={{
                     background: 'rgba(255,255,255,0.2)',
-                    padding: '8px 16px',
+                    padding: '6px 14px',
                     borderRadius: '30px',
-                    fontSize: '0.9rem',
+                    fontSize: '0.85rem',
                     fontWeight: '600',
-                    backdropFilter: 'blur(5px)'
+                    backdropFilter: 'blur(5px)',
+                    color: 'white'
                   }}>
                     🎁 COMPLETAMENTE GRÁTIS
                   </span>
                 ) : (
                   <span style={{
                     background: 'rgba(255,255,255,0.2)',
-                    padding: '8px 16px',
+                    padding: '6px 14px',
                     borderRadius: '30px',
-                    fontSize: '0.9rem',
+                    fontSize: '0.85rem',
                     fontWeight: '600',
-                    backdropFilter: 'blur(5px)'
+                    backdropFilter: 'blur(5px)',
+                    color: 'white'
                   }}>
                     💳 OFERTA ESPECIAL
                   </span>
                 )}
               </div>
               <button 
-                className="close-modal" 
                 onClick={onClose}
                 style={{
                   background: 'rgba(255,255,255,0.2)',
                   border: 'none',
                   color: 'white',
-                  width: 40,
-                  height: 40,
+                  width: 36,
+                  height: 36,
                   borderRadius: '50%',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
                   fontSize: '1.2rem',
-                  backdropFilter: 'blur(5px)'
+                  backdropFilter: 'blur(5px)',
+                  transition: 'all 0.2s'
                 }}
+                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.3)'}
+                onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.2)'}
               >
                 <i className="fas fa-times"></i>
               </button>
             </div>
             
             <h3 style={{ 
-              fontSize: '2rem', 
+              fontSize: '1.8rem', 
               fontWeight: 'bold', 
-              marginBottom: 10,
+              marginBottom: 5,
               color: 'white',
               textShadow: '0 2px 4px rgba(0,0,0,0.2)'
             }}>
@@ -219,10 +265,9 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
             </h3>
             
             <p style={{ 
-              fontSize: '1.1rem', 
+              fontSize: '1rem', 
               opacity: 0.95,
-              color: 'white',
-              maxWidth: '80%'
+              color: 'white'
             }}>
               {isFree 
                 ? 'Crie seu perfil para acessar o livro gratuitamente'
@@ -231,42 +276,46 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
           </div>
         </div>
         
-        {/* CONTEÚDO DO MODAL */}
-        <div className="modal-content" style={{ padding: '30px' }}>
+        {/* CONTEÚDO DO MODAL - COM SCROLL */}
+        <div style={{
+          padding: '24px 30px',
+          overflowY: 'auto',
+          flex: 1
+        }}>
           
           {/* BENEFÍCIOS EM CARDS */}
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: '10px',
-            marginBottom: '25px'
+            gap: '8px',
+            marginBottom: '20px'
           }}>
             <div style={{
               background: '#f0f9ff',
-              padding: '12px',
+              padding: '10px',
               borderRadius: '10px',
               textAlign: 'center'
             }}>
-              <div style={{ fontSize: '24px', marginBottom: '5px' }}>📚</div>
-              <div style={{ fontSize: '13px', fontWeight: '600', color: '#0369a1' }}>Acesso Vitalício</div>
+              <div style={{ fontSize: '22px', marginBottom: '3px' }}>📚</div>
+              <div style={{ fontSize: '12px', fontWeight: '600', color: '#0369a1' }}>Acesso Vitalício</div>
             </div>
             <div style={{
               background: '#f0f9ff',
-              padding: '12px',
+              padding: '10px',
               borderRadius: '10px',
               textAlign: 'center'
             }}>
-              <div style={{ fontSize: '24px', marginBottom: '5px' }}>🎧</div>
-              <div style={{ fontSize: '13px', fontWeight: '600', color: '#0369a1' }}>Todos os Formatos</div>
+              <div style={{ fontSize: '22px', marginBottom: '3px' }}>🎧</div>
+              <div style={{ fontSize: '12px', fontWeight: '600', color: '#0369a1' }}>Todos os Formatos</div>
             </div>
             <div style={{
               background: '#f0f9ff',
-              padding: '12px',
+              padding: '10px',
               borderRadius: '10px',
               textAlign: 'center'
             }}>
-              <div style={{ fontSize: '24px', marginBottom: '5px' }}>🔄</div>
-              <div style={{ fontSize: '13px', fontWeight: '600', color: '#0369a1' }}>Atualizações Grátis</div>
+              <div style={{ fontSize: '22px', marginBottom: '3px' }}>🔄</div>
+              <div style={{ fontSize: '12px', fontWeight: '600', color: '#0369a1' }}>Atualizações Grátis</div>
             </div>
           </div>
 
@@ -274,11 +323,11 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
           <div style={{
             background: '#f8fafc',
             borderLeft: '4px solid #4f46e5',
-            padding: '16px',
+            padding: '14px',
             borderRadius: '8px',
-            marginBottom: '25px'
+            marginBottom: '20px'
           }}>
-            <p style={{ margin: 0, color: '#334155', fontSize: '0.95rem', lineHeight: '1.5' }}>
+            <p style={{ margin: 0, color: '#334155', fontSize: '0.9rem', lineHeight: '1.5' }}>
               <strong>📌 Por que se cadastrar?</strong><br />
               Seu cadastro cria um perfil onde você poderá acessar todos os seus livros adquiridos, fazer download dos materiais e acompanhar sua jornada. Mesmo sendo <strong>gratuito e vitalício</strong>, precisamos do seu email para liberar seu acesso exclusivo.
             </p>
@@ -301,13 +350,13 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
 
           {/* FORMULÁRIO */}
           <form onSubmit={handleSubmit}>
-            <div className="form-group" style={{ marginBottom: '20px' }}>
+            <div style={{ marginBottom: '16px' }}>
               <label htmlFor="fullName" style={{
                 display: 'block',
-                marginBottom: '8px',
+                marginBottom: '6px',
                 fontWeight: '600',
                 color: '#1e293b',
-                fontSize: '0.95rem'
+                fontSize: '0.9rem'
               }}>
                 Nome Completo <span style={{ color: '#dc2626' }}>*</span>
               </label>
@@ -316,32 +365,32 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
                 id="fullName"
                 value={formData.fullName}
                 onChange={handleInputChange}
-                className={errors.fullName ? 'error' : ''}
                 disabled={isLoading}
                 placeholder="Digite seu nome completo"
                 style={{
                   width: '100%',
-                  padding: '14px 16px',
+                  padding: '12px 14px',
                   border: `2px solid ${errors.fullName ? '#dc2626' : '#e2e8f0'}`,
-                  borderRadius: '10px',
-                  fontSize: '1rem',
-                  transition: 'all 0.3s ease'
+                  borderRadius: '8px',
+                  fontSize: '0.95rem',
+                  transition: 'all 0.3s ease',
+                  outline: 'none'
                 }}
               />
               {errors.fullName && (
-                <div style={{ color: '#dc2626', fontSize: '0.85rem', marginTop: '5px' }}>
+                <div style={{ color: '#dc2626', fontSize: '0.8rem', marginTop: '4px' }}>
                   {errors.fullName}
                 </div>
               )}
             </div>
 
-            <div className="form-group" style={{ marginBottom: '20px' }}>
+            <div style={{ marginBottom: '16px' }}>
               <label htmlFor="email" style={{
                 display: 'block',
-                marginBottom: '8px',
+                marginBottom: '6px',
                 fontWeight: '600',
                 color: '#1e293b',
-                fontSize: '0.95rem'
+                fontSize: '0.9rem'
               }}>
                 Email <span style={{ color: '#dc2626' }}>*</span>
               </label>
@@ -350,32 +399,32 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
                 id="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className={errors.email ? 'error' : ''}
                 disabled={isLoading}
                 placeholder="seu@email.com"
                 style={{
                   width: '100%',
-                  padding: '14px 16px',
+                  padding: '12px 14px',
                   border: `2px solid ${errors.email ? '#dc2626' : '#e2e8f0'}`,
-                  borderRadius: '10px',
-                  fontSize: '1rem',
-                  transition: 'all 0.3s ease'
+                  borderRadius: '8px',
+                  fontSize: '0.95rem',
+                  transition: 'all 0.3s ease',
+                  outline: 'none'
                 }}
               />
               {errors.email && (
-                <div style={{ color: '#dc2626', fontSize: '0.85rem', marginTop: '5px' }}>
+                <div style={{ color: '#dc2626', fontSize: '0.8rem', marginTop: '4px' }}>
                   {errors.email}
                 </div>
               )}
             </div>
 
-            <div className="form-group" style={{ marginBottom: '20px' }}>
+            <div style={{ marginBottom: '16px' }}>
               <label htmlFor="confirmEmail" style={{
                 display: 'block',
-                marginBottom: '8px',
+                marginBottom: '6px',
                 fontWeight: '600',
                 color: '#1e293b',
-                fontSize: '0.95rem'
+                fontSize: '0.9rem'
               }}>
                 Confirmar Email <span style={{ color: '#dc2626' }}>*</span>
               </label>
@@ -384,32 +433,32 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
                 id="confirmEmail"
                 value={formData.confirmEmail}
                 onChange={handleInputChange}
-                className={errors.confirmEmail ? 'error' : ''}
                 disabled={isLoading}
                 placeholder="confirme seu email"
                 style={{
                   width: '100%',
-                  padding: '14px 16px',
+                  padding: '12px 14px',
                   border: `2px solid ${errors.confirmEmail ? '#dc2626' : '#e2e8f0'}`,
-                  borderRadius: '10px',
-                  fontSize: '1rem',
-                  transition: 'all 0.3s ease'
+                  borderRadius: '8px',
+                  fontSize: '0.95rem',
+                  transition: 'all 0.3s ease',
+                  outline: 'none'
                 }}
               />
               {errors.confirmEmail && (
-                <div style={{ color: '#dc2626', fontSize: '0.85rem', marginTop: '5px' }}>
+                <div style={{ color: '#dc2626', fontSize: '0.8rem', marginTop: '4px' }}>
                   {errors.confirmEmail}
                 </div>
               )}
             </div>
 
-            <div className="form-group" style={{ marginBottom: '25px' }}>
+            <div style={{ marginBottom: '20px' }}>
               <label htmlFor="phone" style={{
                 display: 'block',
-                marginBottom: '8px',
+                marginBottom: '6px',
                 fontWeight: '600',
                 color: '#1e293b',
-                fontSize: '0.95rem'
+                fontSize: '0.9rem'
               }}>
                 Celular com DDD <span style={{ color: '#dc2626' }}>*</span>
               </label>
@@ -419,19 +468,19 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
                 value={formData.phone}
                 onChange={handleInputChange}
                 placeholder="(11) 99999-9999"
-                className={errors.phone ? 'error' : ''}
                 disabled={isLoading}
                 style={{
                   width: '100%',
-                  padding: '14px 16px',
+                  padding: '12px 14px',
                   border: `2px solid ${errors.phone ? '#dc2626' : '#e2e8f0'}`,
-                  borderRadius: '10px',
-                  fontSize: '1rem',
-                  transition: 'all 0.3s ease'
+                  borderRadius: '8px',
+                  fontSize: '0.95rem',
+                  transition: 'all 0.3s ease',
+                  outline: 'none'
                 }}
               />
               {errors.phone && (
-                <div style={{ color: '#dc2626', fontSize: '0.85rem', marginTop: '5px' }}>
+                <div style={{ color: '#dc2626', fontSize: '0.8rem', marginTop: '4px' }}>
                   {errors.phone}
                 </div>
               )}
@@ -452,11 +501,10 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
               </label>
             </div>
 
-            {/* BOTÕES */}
-            <div className="form-actions" style={{ display: 'flex', gap: '12px' }}>
+            {/* BOTÕES - AGORA SEMPRE VISÍVEIS */}
+            <div style={{ display: 'flex', gap: '12px', marginTop: '10px' }}>
               <button 
                 type="button" 
-                className="btn-secondary" 
                 onClick={onClose} 
                 disabled={isLoading}
                 style={{
@@ -469,14 +517,14 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
                   fontWeight: '600',
                   color: '#475569',
                   cursor: 'pointer',
-                  transition: 'all 0.3s ease'
+                  transition: 'all 0.3s ease',
+                  opacity: isLoading ? 0.7 : 1
                 }}
               >
                 Cancelar
               </button>
               <button 
                 type="submit" 
-                className="btn-primary" 
                 disabled={isLoading}
                 style={{
                   flex: 2,
@@ -501,7 +549,7 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
 
             {/* AVISO DE SEGURANÇA */}
             <div style={{
-              marginTop: '20px',
+              marginTop: '16px',
               textAlign: 'center',
               fontSize: '0.8rem',
               color: '#94a3b8',
