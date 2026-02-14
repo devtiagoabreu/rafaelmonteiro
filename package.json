@@ -12,6 +12,7 @@
     "db:studio": "prisma studio"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@neondatabase/serverless": "^0.9.5",
     "@prisma/adapter-neon": "^6.19.2",
     "@prisma/client": "^6.19.2",
