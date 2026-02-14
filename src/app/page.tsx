@@ -2,25 +2,13 @@
 
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import RegistrationModal from '@/app/livro-1/components/RegistrationModal'
 
 export default function HomePage() {
   const { data: session } = useSession()
   const [showRegistrationModal, setShowRegistrationModal] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<any>(null)
-
-  // Verificar se há uma compra pendente (vinda do modal de cadastro)
-  useEffect(() => {
-    const pendingPurchase = localStorage.getItem('pendingPurchase')
-    if (pendingPurchase) {
-      const { product, userEmail } = JSON.parse(pendingPurchase)
-      localStorage.removeItem('pendingPurchase')
-      
-      // Executar a compra
-      criarPagamentoMercadoPago(product, userEmail)
-    }
-  }, [])
 
   const handleFreeBookClick = () => {
     // Livro 1 - grátis: sempre mostra modal de cadastro
