@@ -272,13 +272,13 @@ export default function Livro1Page() {
                 </ul>
                 <div className="price">
                   <div className="old-price">R$ 47,90</div>
-                  <div className="new-price">R$ 29,90</div>
+                  <div className="new-price">R$ 1,00</div>
                   <span className="discount-badge">-38% de desconto</span>
                 </div>
                 <button className="buy-btn" onClick={() => handleBuyClick({
                   id: 2,
                   title: 'Por Que Você Se Atrai Sempre Pelo Mesmo Tipo de Pessoa',
-                  price: 29.90,
+                  price: 1.00,
                   mpLink: 'https://mpago.la/2uEEC7R'
                 })}>
                   Comprar Agora
@@ -301,13 +301,13 @@ export default function Livro1Page() {
                 </ul>
                 <div className="price">
                   <div className="old-price">R$ 47,90</div>
-                  <div className="new-price">R$ 29,90</div>
+                  <div className="new-price">R$ 1,00</div>
                   <span className="discount-badge">-38% de desconto</span>
                 </div>
                 <button className="buy-btn" onClick={() => handleBuyClick({
                   id: 3,
                   title: 'Ciúme, Insegurança e Medo de Perder',
-                  price: 29.90,
+                  price: 1.00,
                   mpLink: 'https://www.mercadopago.com.br/book3'
                 })}>
                   Comprar Agora
@@ -330,13 +330,13 @@ export default function Livro1Page() {
                 </ul>
                 <div className="price">
                   <div className="old-price">R$ 47,90</div>
-                  <div className="new-price">R$ 29,90</div>
+                  <div className="new-price">R$ 1,00</div>
                   <span className="discount-badge">-38% de desconto</span>
                 </div>
                 <button className="buy-btn" onClick={() => handleBuyClick({
                   id: 4,
                   title: 'Quando o Amor Vira Dependência',
-                  price: 29.90,
+                  price: 1.00,
                   mpLink: 'https://www.mercadopago.com.br/book4'
                 })}>
                   Comprar Agora
@@ -365,7 +365,7 @@ export default function Livro1Page() {
                 <button className="buy-btn" onClick={() => handleBuyClick({
                   id: 5,
                   title: 'Relacionamentos Conscientes',
-                  price: 29.90,
+                  price: 1.00,
                   mpLink: 'https://www.mercadopago.com.br/book5'
                 })}>
                   Comprar Agora
