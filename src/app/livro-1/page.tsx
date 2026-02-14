@@ -236,7 +236,7 @@ export default function Livro1Page() {
                   id: 2,
                   title: 'Por Que Você Se Atrai Sempre Pelo Mesmo Tipo de Pessoa',
                   price: 29.90,
-                  mpLink: 'https://www.mercadopago.com.br/book2'
+                  mpLink: 'https://mpago.la/2uEEC7R'
                 })}>
                   Comprar Agora
                 </button>
