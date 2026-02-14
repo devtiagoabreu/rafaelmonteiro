@@ -2,17 +2,98 @@
 
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import RegistrationModal from '@/app/livro-1/components/RegistrationModal'
 import SocialSidebar from './components/SocialSidebar'
 import WhatsAppFloat from './components/WhatsAppFloat'
 import FaqSection from './components/FaqSection'
+import AccessibilityControls from './components/AccessibilityControls'
 import './landing.css'
 
 export default function HomePage() {
   const { data: session } = useSession()
   const [showRegistrationModal, setShowRegistrationModal] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<any>(null)
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark')
+  const [fontSize, setFontSize] = useState<'small' | 'medium' | 'large'>('medium')
+  const [isNarrating, setIsNarrating] = useState(false)
+  const [speech, setSpeech] = useState<SpeechSynthesisUtterance | null>(null)
+
+  // Carregar preferências salvas
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') as 'dark' | 'light' | null
+    const savedFontSize = localStorage.getItem('fontSize') as 'small' | 'medium' | 'large' | null
+    
+    if (savedTheme) {
+      setTheme(savedTheme)
+      document.documentElement.setAttribute('data-theme', savedTheme)
+    } else {
+      document.documentElement.setAttribute('data-theme', 'dark')
+    }
+    
+    if (savedFontSize) {
+      setFontSize(savedFontSize)
+      document.body.classList.add(`font-${savedFontSize}`)
+    } else {
+      document.body.classList.add('font-medium')
+    }
+  }, [])
+
+  const handleThemeToggle = () => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark'
+    setTheme(newTheme)
+    document.documentElement.setAttribute('data-theme', newTheme)
+    localStorage.setItem('theme', newTheme)
+  }
+
+  const handleFontIncrease = () => {
+    const sizes = ['small', 'medium', 'large'] as const
+    const currentIndex = sizes.indexOf(fontSize)
+    if (currentIndex < sizes.length - 1) {
+      const newSize = sizes[currentIndex + 1]
+      setFontSize(newSize)
+      document.body.classList.remove(`font-${fontSize}`)
+      document.body.classList.add(`font-${newSize}`)
+      localStorage.setItem('fontSize', newSize)
+    }
+  }
+
+  const handleFontDecrease = () => {
+    const sizes = ['small', 'medium', 'large'] as const
+    const currentIndex = sizes.indexOf(fontSize)
+    if (currentIndex > 0) {
+      const newSize = sizes[currentIndex - 1]
+      setFontSize(newSize)
+      document.body.classList.remove(`font-${fontSize}`)
+      document.body.classList.add(`font-${newSize}`)
+      localStorage.setItem('fontSize', newSize)
+    }
+  }
+
+  const handleNarrate = () => {
+    if (isNarrating) {
+      if (speech) {
+        window.speechSynthesis.cancel()
+      }
+      setIsNarrating(false)
+      setSpeech(null)
+    } else {
+      const text = document.querySelector('main')?.innerText || ''
+      if (text && window.speechSynthesis) {
+        const utterance = new SpeechSynthesisUtterance(text)
+        utterance.lang = 'pt-BR'
+        utterance.rate = 1.0
+        utterance.pitch = 1.0
+        utterance.onend = () => {
+          setIsNarrating(false)
+          setSpeech(null)
+        }
+        window.speechSynthesis.speak(utterance)
+        setSpeech(utterance)
+        setIsNarrating(true)
+      }
+    }
+  }
 
   const handleFreeBookClick = () => {
     setSelectedProduct({
@@ -74,12 +155,33 @@ export default function HomePage() {
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
+    <main className="min-h-screen">
+      {/* Controles de Acessibilidade */}
+      <AccessibilityControls
+        onThemeToggle={handleThemeToggle}
+        onFontIncrease={handleFontIncrease}
+        onFontDecrease={handleFontDecrease}
+        onNarrate={handleNarrate}
+        isNarrating={isNarrating}
+        currentTheme={theme}
+      />
+
       {/* Redes Sociais Laterais */}
       <SocialSidebar />
       
       {/* WhatsApp Flutuante */}
       <WhatsAppFloat phoneNumber="5519994559836" />
+
+      {/* Indicador de Narração */}
+      {isNarrating && (
+        <div className="narration-indicator">
+          <i className="fas fa-volume-up"></i>
+          <span>Narração em andamento...</span>
+          <button onClick={handleNarrate}>
+            <i className="fas fa-stop"></i>
+          </button>
+        </div>
+      )}
 
       {/* HEADER */}
       <header className="landing-header">
@@ -195,61 +297,6 @@ export default function HomePage() {
               🔥 Quero meu livro grátis agora!
             </button>
             <p className="text-sm text-gray-500 mt-4">* Acesso imediato após cadastro</p>
-          </div>
-        </div>
-      </section>
-
-      {/* SEÇÃO "TODOS OS LIVROS SEGUEM O MESMO PADRÃO" */}
-      <section className="comparison-section">
-        <div className="container">
-          <h2>📚 Todos os Livros da Série Seguem o Mesmo Padrão</h2>
-          <p className="section-description">
-            Ao adquirir qualquer livro, você terá acesso a múltiplos formatos para estudar do jeito que preferir
-          </p>
-          
-          <div className="comparison-grid">
-            <div className="comparison-card free-card">
-              <div className="card-header">
-                <span>GRÁTIS</span>
-              </div>
-              <div className="card-body">
-                <h3>Livro 1</h3>
-                <p>O Desejo Não Morre — Ele É Mal Cuidado</p>
-                <ul>
-                  <li><span>✓</span> PDF + Audiobook + Podcast</li>
-                  <li><span>✓</span> Videocast + Resumo + Infográfico</li>
-                  <li><span>✓</span> Acesso vitalício</li>
-                </ul>
-                <button
-                  onClick={handleFreeBookClick}
-                  className="card-btn"
-                >
-                  Baixar Grátis
-                </button>
-              </div>
-            </div>
-            
-            <div className="comparison-card paid-card">
-              <div className="card-header">
-                <span>Livros 2, 3, 4 e 5</span>
-              </div>
-              <div className="card-body">
-                <h3>Toda a Jornada</h3>
-                <p>Todos os livros da série seguem o mesmo formato:</p>
-                <ul>
-                  <li><span>✓</span> Ebook em PDF</li>
-                  <li><span>✓</span> Audiobook completo</li>
-                  <li><span>✓</span> Podcast com episódios exclusivos</li>
-                  <li><span>✓</span> Material de apoio</li>
-                </ul>
-                <a 
-                  href="#livros" 
-                  className="card-btn"
-                >
-                  Conheça os Livros
-                </a>
-              </div>
-            </div>
           </div>
         </div>
       </section>
@@ -459,9 +506,9 @@ export default function HomePage() {
             <div className="footer-section">
               <h4>Redes Sociais</h4>
               <div className="social-links">
-                <a href="#">📘</a>
-                <a href="#">📷</a>
-                <a href="#">🎵</a>
+                <a href="#"><i className="fab fa-facebook"></i></a>
+                <a href="#"><i className="fab fa-instagram"></i></a>
+                <a href="#"><i className="fab fa-tiktok"></i></a>
               </div>
             </div>
           </div>

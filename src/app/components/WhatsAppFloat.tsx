@@ -11,7 +11,6 @@ export default function WhatsAppFloat({ phoneNumber, message = 'Olá! Vim do sit
   const [isVisible, setIsVisible] = useState(false)
 
   useEffect(() => {
-    // Mostrar apenas depois de rolar um pouco
     const handleScroll = () => {
       if (window.scrollY > 300) {
         setIsVisible(true)
