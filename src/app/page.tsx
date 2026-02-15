@@ -253,12 +253,13 @@ export default function HomePage() {
             </div>
           </div>
           
+          {/* Coluna da Direita - Imagem do Livro */}
           <div className="hero-image">
-            <div className="image-placeholder">
-              <span className="book-icon">📘</span>
-              <h3>O Desejo Não Morre</h3>
-              <p>Ele é mal cuidado</p>
-            </div>
+            <img 
+              src="/images/odesejonaomorre.svg" 
+              alt="Capa do livro O Desejo Não Morre, ele é mal cuidado."
+              className="w-full h-full object-cover rounded-2xl"
+            />
           </div>
         </div>
       </section>
