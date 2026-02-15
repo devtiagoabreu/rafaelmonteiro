@@ -7,14 +7,14 @@ import RegistrationModal from '@/app/livro-1/components/RegistrationModal'
 import SocialSidebar from './components/SocialSidebar'
 import WhatsAppFloat from './components/WhatsAppFloat'
 import FaqSection from './components/FaqSection'
-import AccessibilityControls from './components/AccessibilityControls'
+import NavbarControls from './components/NavbarControls'
 import './landing.css'
 
 export default function HomePage() {
   const { data: session } = useSession()
   const [showRegistrationModal, setShowRegistrationModal] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<any>(null)
-  const [theme, setTheme] = useState<'dark' | 'light'>('dark')
+  const [theme, setTheme] = useState<'dark' | 'light'>('light') // MUDADO PARA LIGHT COMO PADRÃO
   const [fontSize, setFontSize] = useState<'small' | 'medium' | 'large'>('medium')
   const [isNarrating, setIsNarrating] = useState(false)
   const [speech, setSpeech] = useState<SpeechSynthesisUtterance | null>(null)
@@ -28,7 +28,8 @@ export default function HomePage() {
       setTheme(savedTheme)
       document.documentElement.setAttribute('data-theme', savedTheme)
     } else {
-      document.documentElement.setAttribute('data-theme', 'dark')
+      // PADRÃO LIGHT
+      document.documentElement.setAttribute('data-theme', 'light')
     }
     
     if (savedFontSize) {
@@ -156,17 +157,7 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen">
-      {/* Controles de Acessibilidade */}
-      <AccessibilityControls
-        onThemeToggle={handleThemeToggle}
-        onFontIncrease={handleFontIncrease}
-        onFontDecrease={handleFontDecrease}
-        onNarrate={handleNarrate}
-        isNarrating={isNarrating}
-        currentTheme={theme}
-      />
-
-      {/* Redes Sociais Laterais */}
+      {/* Redes Sociais Laterais (menores) */}
       <SocialSidebar />
       
       {/* WhatsApp Flutuante */}
@@ -183,7 +174,7 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* HEADER */}
+      {/* HEADER COM CONTROLES NO NAVBAR */}
       <header className="landing-header">
         <div className="container">
           <div className="logo-area">
@@ -192,7 +183,17 @@ export default function HomePage() {
             <span className="title">Terapeuta de Relacionamentos</span>
           </div>
           
-          <div className="flex items-center space-x-4">
+          <div className="header-actions">
+            {/* Controles de Acessibilidade no Navbar */}
+            <NavbarControls
+              onThemeToggle={handleThemeToggle}
+              onFontIncrease={handleFontIncrease}
+              onFontDecrease={handleFontDecrease}
+              onNarrate={handleNarrate}
+              isNarrating={isNarrating}
+              currentTheme={theme}
+            />
+            
             {session ? (
               <Link 
                 href="/dashboard" 
