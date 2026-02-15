@@ -259,8 +259,8 @@ export default function HomePage() {
             <Image
               src="/images/odesejonaomorre.svg"
               alt="Capa do livro O Desejo Não Morre"
-              width={500}
-              height={700}
+              width={200}
+              height={400}
               className="w-full h-full object-cover rounded-2xl"
               priority // Prioriza o carregamento desta imagem
             />
