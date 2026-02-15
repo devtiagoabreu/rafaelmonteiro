@@ -257,7 +257,7 @@ export default function HomePage() {
           {/* Coluna da Direita - Imagem do Livro */}
           <div className="hero-image">
             <Image
-              src="/images/odesejonaomorre.svg"
+              src="/images/ebook-o-desejo-nao-morre-ele-e-mal-cuidado.png"
               alt="Capa do livro O Desejo Não Morre"
               width={200}
               height={400}
