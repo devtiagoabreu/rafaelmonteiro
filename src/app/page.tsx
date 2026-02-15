@@ -236,7 +236,7 @@ export default function HomePage() {
                 className="btn-primary"
               >
                 <span>📘</span>
-                Baixar Grátis - Livro 1
+                Acesso Grátis ao Livro 1
               </button>
               
               <a 
