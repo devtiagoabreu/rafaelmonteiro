@@ -9,6 +9,7 @@ import WhatsAppFloat from './components/WhatsAppFloat'
 import FaqSection from './components/FaqSection'
 import NavbarControls from './components/NavbarControls'
 import './landing.css'
+import Image from 'next/image'
 
 export default function HomePage() {
   const { data: session } = useSession()
@@ -255,10 +256,13 @@ export default function HomePage() {
           
           {/* Coluna da Direita - Imagem do Livro */}
           <div className="hero-image">
-            <img 
-              src="/images/odesejonaomorre.svg" 
-              alt="Capa do livro O Desejo Não Morre, ele é mal cuidado."
+            <Image
+              src="/images/odesejonaomorre.svg"
+              alt="Capa do livro O Desejo Não Morre"
+              width={500}
+              height={700}
               className="w-full h-full object-cover rounded-2xl"
+              priority // Prioriza o carregamento desta imagem
             />
           </div>
         </div>
