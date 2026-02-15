@@ -608,6 +608,102 @@ body {
   animation: float 6s ease-in-out infinite;
 }
 
+/* ===== HERO SECTION - AJUSTE DA IMAGEM ===== */
+.landing-hero .hero-image {
+  background: linear-gradient(135deg, var(--primary-light), var(--primary));
+  border-radius: 30px;
+  height: 450px; /* REDUZIDO de 550px para 450px */
+  width: 100%;
+  max-width: 400px; /* LARGURA MÁXIMA FIXA */
+  margin: 0 auto; /* CENTRALIZA */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-lg);
+  transition: all 0.5s ease;
+  border: 1px solid rgba(255,255,255,0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.landing-hero .hero-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* MUDA DE 'cover' para 'contain' para não cortar */
+  border-radius: 30px;
+  transition: transform 0.5s ease;
+}
+
+.landing-hero .hero-image:hover img {
+  transform: scale(1.05);
+}
+
+/* Ajuste do container principal para melhor distribuição */
+.landing-hero .container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px; /* REDUZIDO de 60px para 40px */
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+/* Ajuste do conteúdo para ocupar menos espaço */
+.landing-hero .hero-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* REDUZIDO de 25px para 20px */
+}
+
+.landing-hero h1 {
+  font-size: 3.5rem; /* REDUZIDO de 4rem */
+}
+
+.landing-hero .subtitle {
+  font-size: 2rem; /* REDUZIDO de 2.5rem */
+}
+
+/* Responsividade */
+@media (max-width: 992px) {
+  .landing-hero .hero-image {
+    height: 400px;
+    max-width: 350px;
+  }
+  
+  .landing-hero h1 {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .landing-hero .container {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .landing-hero .hero-image {
+    height: 380px;
+    max-width: 320px;
+  }
+  
+  .landing-hero h1 {
+    font-size: 2.8rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .landing-hero .hero-image {
+    height: 320px;
+    max-width: 280px;
+  }
+  
+  .landing-hero h1 {
+    font-size: 2.2rem;
+  }
+}
+
 /* ===== SEÇÃO DE FORMATOS ===== */
 .formats-section {
   padding: 80px 0;
