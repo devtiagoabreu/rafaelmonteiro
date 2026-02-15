@@ -58,7 +58,6 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* ===== HEADER SEM BORDAS ARREDONDADAS - VERSÃO CORRIGIDA ===== */
 /* ===== HEADER TOTALMENTE QUADRADO ===== */
 .landing-header {
   background: var(--bg-primary);
@@ -69,7 +68,7 @@ body {
   z-index: 1000;
   border-bottom: 1px solid var(--border-color);
   width: 100%;
-  border-radius: 0 !important; /* FORÇA BORDA ZERO */
+  border-radius: 0 !important;
 }
 
 .landing-header .container {
@@ -80,7 +79,7 @@ body {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  border-radius: 0 !important; /* GARANTE QUE O CONTAINER TAMBÉM É QUADRADO */
+  border-radius: 0 !important;
 }
 
 .landing-header .logo-area {
@@ -131,70 +130,13 @@ body {
   border-radius: 0;
 }
 
-/* BOTÕES DO NAVBAR - ESTES SÃO REDONDOS (CORRETO) */
+/* BOTÕES DO NAVBAR - REDONDOS */
 .navbar-controls {
   display: flex;
   align-items: center;
   gap: 8px;
   margin-right: 15px;
   border-radius: 0;
-}
-
-.navbar-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%; /* BOTÕES REDONDOS */
-  background: var(--bg-secondary);
-  color: var(--primary);
-  border: 1px solid var(--border-color);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.1rem;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 5px var(--shadow-color);
-}
-
-.navbar-btn:hover {
-  background: var(--primary);
-  color: white;
-  transform: scale(1.1);
-  border-color: var(--primary);
-}
-
-.navbar-btn i {
-  font-size: 1.1rem;
-}
-
-/* BOTÃO DE ENTRAR - TAMBÉM REDONDO (CORRETO) */
-.landing-header .header-btn {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  color: white;
-  padding: 10px 25px;
-  border-radius: 40px; /* BOTÃO REDONDO */
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  font-size: 0.95rem;
-  letter-spacing: 0.5px;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  box-shadow: 0 4px 10px var(--shadow-color);
-  border: none;
-  cursor: pointer;
-}
-
-.landing-header .header-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 15px var(--shadow-color);
-}
-
-/* ===== CONTROLES DE ACESSIBILIDADE NO NAVBAR ===== */
-.navbar-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-right: 15px;
 }
 
 .navbar-btn {
@@ -224,7 +166,29 @@ body {
   font-size: 1.1rem;
 }
 
-/* ===== BARRA DE REDES SOCIAIS LATERAL (MENOR) ===== */
+/* BOTÃO DE ENTRAR - REDONDO */
+.landing-header .header-btn {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  padding: 10px 25px;
+  border-radius: 40px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 500;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  box-shadow: 0 4px 10px var(--shadow-color);
+  border: none;
+  cursor: pointer;
+}
+
+.landing-header .header-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px var(--shadow-color);
+}
+
+/* ===== BARRA DE REDES SOCIAIS LATERAL ===== */
 .social-sidebar {
   position: fixed;
   left: 15px;
@@ -311,105 +275,7 @@ body {
   }
 }
 
-/* ===== HEADER ===== */
-.landing-header {
-  background: var(--bg-primary);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 4px 15px var(--shadow-color);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.landing-header .container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 15px 30px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.landing-header .logo-area {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.landing-header .logo-area .name {
-  font-family: 'Playfair Display', serif;
-  font-size: 1.8rem;
-  font-weight: 700;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: -0.5px;
-}
-
-.landing-header .logo-area .separator {
-  color: var(--text-muted);
-  font-size: 1.5rem;
-  font-weight: 300;
-  display: none;
-}
-
-.landing-header .logo-area .title {
-  font-family: 'Montserrat', sans-serif;
-  color: var(--text-muted);
-  font-size: 0.95rem;
-  font-weight: 300;
-  letter-spacing: 0.5px;
-  display: none;
-}
-
-@media (min-width: 640px) {
-  .landing-header .logo-area .separator,
-  .landing-header .logo-area .title {
-    display: inline;
-  }
-}
-
-.landing-header .header-btn {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  color: white;
-  padding: 12px 30px;
-  border-radius: 40px;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  font-size: 0.95rem;
-  letter-spacing: 0.5px;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  box-shadow: 0 4px 15px var(--shadow-color);
-  border: none;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-
-.landing-header .header-btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-  transition: left 0.6s ease;
-}
-
-.landing-header .header-btn:hover::before {
-  left: 100%;
-}
-
-.landing-header .header-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px var(--shadow-color);
-}
-
-/* ===== HERO SECTION ===== */
+/* ===== HERO SECTION - CORRIGIDO (IMAGEM SEM FUNDO) ===== */
 .landing-hero {
   background: var(--hero-gradient);
   color: white;
@@ -434,7 +300,7 @@ body {
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 60px;
+  gap: 40px;
   align-items: center;
   position: relative;
   z-index: 2;
@@ -443,7 +309,7 @@ body {
 .landing-hero .hero-content {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 20px;
 }
 
 .landing-hero .badge {
@@ -464,7 +330,7 @@ body {
 
 .landing-hero h1 {
   font-family: 'Playfair Display', serif;
-  font-size: 4rem;
+  font-size: 3.5rem;
   font-weight: 800;
   line-height: 1.1;
   margin: 0;
@@ -474,7 +340,7 @@ body {
 
 .landing-hero .subtitle {
   font-family: 'Dancing Script', cursive;
-  font-size: 2.5rem;
+  font-size: 2rem;
   color: rgba(255,255,255,0.9);
   font-weight: 400;
   margin-top: -10px;
@@ -579,93 +445,31 @@ body {
   gap: 8px;
 }
 
+/* ===== IMAGEM DO LIVRO - SEM FUNDO, SEM BORDAS ===== */
 .landing-hero .hero-image {
-  background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-  backdrop-filter: blur(10px);
-  border-radius: 30px;
-  height: 550px;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 30px 50px -20px rgba(0,0,0,0.5);
-  transition: all 0.5s ease;
-  border: 1px solid rgba(255,255,255,0.2);
-  position: relative;
-  overflow: hidden;
-}
-
-.landing-hero .hero-image .image-placeholder {
-  text-align: center;
-  padding: 40px;
-  color: white;
-}
-
-.landing-hero .hero-image .image-placeholder .book-icon {
-  font-size: 8rem;
-  margin-bottom: 20px;
-  display: block;
-  filter: drop-shadow(0 10px 20px rgba(0,0,0,0.3));
-  animation: float 6s ease-in-out infinite;
-}
-
-/* ===== HERO SECTION - AJUSTE DA IMAGEM ===== */
-.landing-hero .hero-image {
-  background: linear-gradient(135deg, var(--primary-light), var(--primary));
-  border-radius: 30px;
-  height: 450px; /* REDUZIDO de 550px para 450px */
+  height: 450px;
   width: 100%;
-  max-width: 400px; /* LARGURA MÁXIMA FIXA */
-  margin: 0 auto; /* CENTRALIZA */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: var(--shadow-lg);
-  transition: all 0.5s ease;
-  border: 1px solid rgba(255,255,255,0.2);
+  max-width: 400px;
+  margin: 0 auto;
   position: relative;
-  overflow: hidden;
 }
 
 .landing-hero .hero-image img {
   width: 100%;
   height: 100%;
-  object-fit: contain; /* MUDA DE 'cover' para 'contain' para não cortar */
-  border-radius: 30px;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.3));
   transition: transform 0.5s ease;
 }
 
-.landing-hero .hero-image:hover img {
-  transform: scale(1.05);
+.landing-hero .hero-image img:hover {
+  transform: scale(1.05) translateY(-10px);
 }
 
-/* Ajuste do container principal para melhor distribuição */
-.landing-hero .container {
-  max-width: 1400px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px; /* REDUZIDO de 60px para 40px */
-  align-items: center;
-  position: relative;
-  z-index: 2;
-}
-
-/* Ajuste do conteúdo para ocupar menos espaço */
-.landing-hero .hero-content {
-  display: flex;
-  flex-direction: column;
-  gap: 20px; /* REDUZIDO de 25px para 20px */
-}
-
-.landing-hero h1 {
-  font-size: 3.5rem; /* REDUZIDO de 4rem */
-}
-
-.landing-hero .subtitle {
-  font-size: 2rem; /* REDUZIDO de 2.5rem */
-}
-
-/* Responsividade */
+/* Responsividade da imagem */
 @media (max-width: 992px) {
   .landing-hero .hero-image {
     height: 400px;
@@ -1280,16 +1084,8 @@ body {
   100% { transform: scale(1); }
 }
 
-/* ===== RESPONSIVIDADE ===== */
+/* ===== RESPONSIVIDADE GERAL ===== */
 @media (max-width: 992px) {
-  .landing-hero h1 {
-    font-size: 3rem;
-  }
-  
-  .landing-hero .subtitle {
-    font-size: 2rem;
-  }
-  
   .formats-section h2,
   .faq-section h2,
   .books-section h2 {
@@ -1309,7 +1105,6 @@ body {
   .landing-hero .container {
     grid-template-columns: 1fr;
     text-align: center;
-    gap: 40px;
   }
   
   .landing-hero .badge {
@@ -1328,40 +1123,12 @@ body {
     justify-content: center;
   }
   
-  .landing-hero h1 {
-    font-size: 2.5rem;
-  }
-  
-  .landing-hero .hero-image {
-    height: 400px;
-  }
-  
   .social-sidebar {
     display: none;
-  }
-  
-  .accessibility-controls {
-    top: auto;
-    bottom: 100px;
-    right: 10px;
   }
 }
 
 @media (max-width: 576px) {
-  .landing-hero h1 {
-    font-size: 2rem;
-  }
-  
-  .landing-hero .subtitle {
-    font-size: 1.5rem;
-  }
-  
-  .landing-hero .btn-primary,
-  .landing-hero .btn-secondary {
-    width: 100%;
-    justify-content: center;
-  }
-  
   .formats-section h2,
   .faq-section h2,
   .books-section h2 {
@@ -1386,11 +1153,5 @@ body {
   
   .combo-highlight .price {
     font-size: 3rem;
-  }
-  
-  .whatsapp-float a {
-    width: 60px;
-    height: 60px;
-    font-size: 2rem;
   }
 }
