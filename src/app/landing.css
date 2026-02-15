@@ -59,6 +59,7 @@ body {
 }
 
 /* ===== HEADER SEM BORDAS ARREDONDADAS - VERSÃO CORRIGIDA ===== */
+/* ===== HEADER TOTALMENTE QUADRADO ===== */
 .landing-header {
   background: var(--bg-primary);
   backdrop-filter: blur(10px);
@@ -68,6 +69,7 @@ body {
   z-index: 1000;
   border-bottom: 1px solid var(--border-color);
   width: 100%;
+  border-radius: 0 !important; /* FORÇA BORDA ZERO */
 }
 
 .landing-header .container {
@@ -78,13 +80,14 @@ body {
   justify-content: space-between;
   align-items: center;
   width: 100%;
-  /* REMOVIDO qualquer border-radius */
+  border-radius: 0 !important; /* GARANTE QUE O CONTAINER TAMBÉM É QUADRADO */
 }
 
 .landing-header .logo-area {
   display: flex;
   align-items: center;
   gap: 12px;
+  border-radius: 0;
 }
 
 .landing-header .logo-area .name {
@@ -125,13 +128,51 @@ body {
   display: flex;
   align-items: center;
   gap: 15px;
+  border-radius: 0;
 }
 
+/* BOTÕES DO NAVBAR - ESTES SÃO REDONDOS (CORRETO) */
+.navbar-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 15px;
+  border-radius: 0;
+}
+
+.navbar-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%; /* BOTÕES REDONDOS */
+  background: var(--bg-secondary);
+  color: var(--primary);
+  border: 1px solid var(--border-color);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px var(--shadow-color);
+}
+
+.navbar-btn:hover {
+  background: var(--primary);
+  color: white;
+  transform: scale(1.1);
+  border-color: var(--primary);
+}
+
+.navbar-btn i {
+  font-size: 1.1rem;
+}
+
+/* BOTÃO DE ENTRAR - TAMBÉM REDONDO (CORRETO) */
 .landing-header .header-btn {
   background: linear-gradient(135deg, var(--primary), var(--secondary));
   color: white;
   padding: 10px 25px;
-  border-radius: 40px; /* ESTE É O BOTÃO, NÃO O HEADER */
+  border-radius: 40px; /* BOTÃO REDONDO */
   font-family: 'Montserrat', sans-serif;
   font-weight: 500;
   font-size: 0.95rem;
