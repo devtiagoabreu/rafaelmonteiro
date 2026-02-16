@@ -12,7 +12,7 @@ export default function DownloadMenu() {
     { name: 'Videocast', icon: 'fa-video', url: 'https://drive.google.com/file/d/15kphZuS991O-bJrxS07jaP37tjldr0kQ/view' },
     { name: 'Resumo (PDF)', icon: 'fa-file-alt', url: 'https://drive.google.com/file/d/1-gGQO5QQDQsuB5_CVPzDuuQ2YA809dod/view' },
     { name: 'Infográfico', icon: 'fa-chart-pie', url: 'https://drive.google.com/file/d/1fq31WVqTLskDU50Bk9qYmkeIXQu8OIro/view' },
-    { name: 'Meditação Guiada', icon: 'fa-person-meditating', url: 'https://drive.google.com/file/d/13cJLxFRdooENpcYdmr7Hwuv0H-22xK2y/view?usp=drive_link' }
+    { name: 'Meditação Guiada', icon: 'fa-heart', url: 'https://drive.google.com/file/d/13cJLxFRdooENpcYdmr7Hwuv0H-22xK2y/view?usp=drive_link' }
   ]
 
   return (
