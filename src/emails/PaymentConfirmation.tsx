@@ -82,7 +82,7 @@ export const PaymentConfirmationEmail = ({
               </Link>
             </Section>
 
-            {/* Instruções de primeiro acesso - CORRIGIDO */}
+            {/* Instruções de primeiro acesso */}
             <Section style={instructionsBox}>
               <Text style={instructionsTitle}>📝 Primeiro acesso?</Text>
               <Text style={instructionsText}>
@@ -102,7 +102,7 @@ export const PaymentConfirmationEmail = ({
               </Text>
             </Section>
 
-            <Hr style={hr} />
+            <Hr style={hrStyle} />
 
             {/* Rodapé com WhatsApp */}
             <Section style={footerSection}>
@@ -237,7 +237,7 @@ const button: React.CSSProperties = {
   transition: 'all 0.3s ease',
 };
 
-// Novos estilos para as instruções
+// Estilos para as instruções
 const instructionsBox: React.CSSProperties = {
   backgroundColor: '#f0f9ff',
   borderRadius: '8px',
@@ -258,6 +258,12 @@ const instructionsText: React.CSSProperties = {
   lineHeight: '22px',
   marginBottom: '8px',
   color: '#1e3a8a',
+};
+
+// Estilo para o Hr (corrigido)
+const hrStyle: React.CSSProperties = {
+  borderColor: '#e9e0dd',
+  margin: '30px 0',
 };
 
 const footerSection: React.CSSProperties = {
