@@ -197,8 +197,8 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
             <h3>{isFree ? '🎁 Livro Grátis' : '📚 Finalizar Compra'}</h3>
             <p style={{ fontSize: '0.8rem', opacity: 0.9, marginTop: '3px' }}>
               {isFree 
-                ? 'Para acessar o livro 1'
-                : 'Crie sua conta e seja redirecionado para o pagamento'}
+                ? 'Para acessar o livro 1.'
+                : 'Crie sua conta.'}
             </p>
           </div>
           <button className="close-modal" onClick={onClose}>
