@@ -1,3 +1,5 @@
+// src/lib/email-service.ts
+
 import { render } from '@react-email/components';
 import { sendEmail } from './email';
 import PaymentConfirmationEmail from '@/emails/PaymentConfirmation';
@@ -28,9 +30,10 @@ export async function sendPaymentConfirmationEmails({
   console.log('📧 ===== INICIANDO ENVIO DE E-MAILS DE CONFIRMAÇÃO =====');
   
   try {
-    const baseUrl = process.env.VERCEL_URL 
-      ? `https://${process.env.VERCEL_URL}` 
-      : process.env.NEXTAUTH_URL || 'http://localhost:3000';
+    // 🔴 CORREÇÃO: Usar sempre o domínio principal, não o de preview
+    const baseUrl = 'https://rafaelmonteiro-pi.vercel.app';
+    
+    console.log('📧 Base URL:', baseUrl);
 
     // Formatar lista de livros para o combo
     const bookTitles = books.map(book => `• ${book.title} (Livro ${book.bookNumber})`);
@@ -45,7 +48,7 @@ export async function sendPaymentConfirmationEmails({
         productPrice: product.price.toFixed(2).replace('.', ','),
         isCombo,
         books: bookTitles,
-        dashboardUrl: `${baseUrl}/login?email=${encodeURIComponent(userEmail)}`, // Link para login com email pré-preenchido
+        dashboardUrl: `${baseUrl}/login?email=${encodeURIComponent(userEmail)}`,
       })
     );
 
