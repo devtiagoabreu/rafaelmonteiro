@@ -1,4 +1,5 @@
 // src/app/page.tsx
+
 'use client'
 
 import { useSession } from 'next-auth/react'
@@ -17,26 +18,16 @@ export default function HomePage() {
   const [showRegistrationModal, setShowRegistrationModal] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<any>(null)
   const [theme, setTheme] = useState<'dark' | 'light'>('light')
-  const [fontSize, setFontSize] = useState<'small' | 'medium' | 'large'>('medium')
   const [isNarrating, setIsNarrating] = useState(false)
   const [speech, setSpeech] = useState<SpeechSynthesisUtterance | null>(null)
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as 'dark' | 'light' | null
-    const savedFontSize = localStorage.getItem('fontSize') as 'small' | 'medium' | 'large' | null
-    
     if (savedTheme) {
       setTheme(savedTheme)
       document.documentElement.setAttribute('data-theme', savedTheme)
     } else {
       document.documentElement.setAttribute('data-theme', 'light')
-    }
-    
-    if (savedFontSize) {
-      setFontSize(savedFontSize)
-      document.body.classList.add(`font-${savedFontSize}`)
-    } else {
-      document.body.classList.add('font-medium')
     }
   }, [])
 
@@ -45,30 +36,6 @@ export default function HomePage() {
     setTheme(newTheme)
     document.documentElement.setAttribute('data-theme', newTheme)
     localStorage.setItem('theme', newTheme)
-  }
-
-  const handleFontIncrease = () => {
-    const sizes = ['small', 'medium', 'large'] as const
-    const currentIndex = sizes.indexOf(fontSize)
-    if (currentIndex < sizes.length - 1) {
-      const newSize = sizes[currentIndex + 1]
-      setFontSize(newSize)
-      document.body.classList.remove(`font-${fontSize}`)
-      document.body.classList.add(`font-${newSize}`)
-      localStorage.setItem('fontSize', newSize)
-    }
-  }
-
-  const handleFontDecrease = () => {
-    const sizes = ['small', 'medium', 'large'] as const
-    const currentIndex = sizes.indexOf(fontSize)
-    if (currentIndex > 0) {
-      const newSize = sizes[currentIndex - 1]
-      setFontSize(newSize)
-      document.body.classList.remove(`font-${fontSize}`)
-      document.body.classList.add(`font-${newSize}`)
-      localStorage.setItem('fontSize', newSize)
-    }
   }
 
   const handleNarrate = () => {
@@ -107,23 +74,13 @@ export default function HomePage() {
   }
 
   const handleBuyClick = (product: any) => {
-    if (!session) {
-      setSelectedProduct(product)
-      setShowRegistrationModal(true)
-    } else {
-      const userEmail = session.user?.email
-      if (!userEmail) {
-        console.error('Email não encontrado na sessão')
-        alert('Erro: email não encontrado. Tente fazer login novamente.')
-        return
-      }
-
-      if (product.id === 1) {
-        window.location.href = '/livro-1'
-      } else {
-        criarPagamentoMercadoPago(product, userEmail)
-      }
-    }
+    console.log('🔵 Produto selecionado:', product)
+    
+    // 🔴 CORREÇÃO: SEMPRE abre o modal primeiro
+    setSelectedProduct(product)
+    setShowRegistrationModal(true)
+    
+    // NÃO redireciona diretamente, deixa o modal cuidar do fluxo
   }
 
   const criarPagamentoMercadoPago = async (product: any, userEmail: string) => {
@@ -145,7 +102,8 @@ export default function HomePage() {
       console.log('✅ Preferência criada:', data)
       
       if (data.init_point) {
-        window.location.href = data.init_point
+        // 🔴 Usar window.open em vez de location.href para evitar que o app capture
+        window.open(data.init_point, '_blank')
       } else {
         alert('Erro ao criar pagamento. Tente novamente.')
       }
@@ -234,8 +192,8 @@ export default function HomePage() {
             <Image
               src="/images/ebook-o-desejo-nao-morre-ele-e-mal-cuidado.png"
               alt="Capa do livro O Desejo Não Morre"
-              width={400}
-              height={600}
+              width={200}
+              height={400}
               className="w-full h-full object-contain"
               priority
             />
@@ -305,7 +263,11 @@ export default function HomePage() {
                   <span className="discount-badge">79% OFF</span>
                 </div>
                 <button
-                  onClick={() => handleBuyClick({ id: 2, title: 'Por Que Você Se Atrai Sempre Pelo Mesmo Tipo de Pessoa', price: 9.90 })}
+                  onClick={() => handleBuyClick({ 
+                    id: 2, 
+                    title: 'Por Que Você Se Atrai Sempre Pelo Mesmo Tipo de Pessoa', 
+                    price: 9.90 
+                  })}
                   className="buy-btn"
                 >
                   Comprar Agora
@@ -332,7 +294,11 @@ export default function HomePage() {
                   <span className="discount-badge">79% OFF</span>
                 </div>
                 <button
-                  onClick={() => handleBuyClick({ id: 3, title: 'Ciúme, Insegurança e Medo de Perder', price: 9.90 })}
+                  onClick={() => handleBuyClick({ 
+                    id: 3, 
+                    title: 'Ciúme, Insegurança e Medo de Perder', 
+                    price: 9.90 
+                  })}
                   className="buy-btn"
                 >
                   Comprar Agora
@@ -359,7 +325,11 @@ export default function HomePage() {
                   <span className="discount-badge">79% OFF</span>
                 </div>
                 <button
-                  onClick={() => handleBuyClick({ id: 4, title: 'Quando o Amor Vira Dependência', price: 9.90 })}
+                  onClick={() => handleBuyClick({ 
+                    id: 4, 
+                    title: 'Quando o Amor Vira Dependência', 
+                    price: 9.90 
+                  })}
                   className="buy-btn"
                 >
                   Comprar Agora
@@ -386,7 +356,11 @@ export default function HomePage() {
                   <span className="discount-badge">79% OFF</span>
                 </div>
                 <button
-                  onClick={() => handleBuyClick({ id: 5, title: 'Relacionamentos Conscientes', price: 9.90 })}
+                  onClick={() => handleBuyClick({ 
+                    id: 5, 
+                    title: 'Relacionamentos Conscientes', 
+                    price: 9.90 
+                  })}
                   className="buy-btn"
                 >
                   Comprar Agora
@@ -401,7 +375,11 @@ export default function HomePage() {
             <div className="price">R$ 29,90</div>
             <p className="save"><s>De R$ 191,60</s> • Economize R$ 161,70</p>
             <button
-              onClick={() => handleBuyClick({ id: 6, title: 'Pacote Completo', price: 29.90 })}
+              onClick={() => handleBuyClick({ 
+                id: 6, 
+                title: 'Pacote Completo', 
+                price: 29.90 
+              })}
               className="combo-btn"
             >
               🔥 Comprar Pacote Completo

@@ -166,7 +166,9 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
         console.log('✅ Preferência criada:', preferenceData)
 
         if (preferenceData.init_point) {
-          window.location.href = preferenceData.init_point
+          // 🔴 Usar window.open em vez de window.location.href
+          // Isso abre em nova aba e evita que o app capture
+          window.open(preferenceData.init_point, '_blank')
         } else {
           alert('Erro ao criar pagamento. Tente novamente.')
         }
