@@ -1,8 +1,10 @@
+// src/app/components/SocialSidebar.tsx
+
 'use client'
 
 export default function SocialSidebar() {
   return (
-    <div className="social-sidebar">
+    <div className="social-sidebar right">
       <a 
         href="https://facebook.com" 
         target="_blank" 

@@ -1204,3 +1204,47 @@ input:autofill {
 .animate-shake:hover {
   animation: shake 0.3s ease-in-out;
 }
+
+/* ===== BARRA DE REDES SOCIAIS LATERAL - GLOBAL ===== */
+.social-sidebar {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 100;
+}
+
+.social-sidebar a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  background: var(--bg-secondary, #f8f4f3);
+  color: var(--primary, #9d4e7c);
+  font-size: 1.3rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  box-shadow: 0 4px 10px var(--shadow-color, rgba(0,0,0,0.1));
+  opacity: 0.7;
+}
+
+.social-sidebar a:hover {
+  opacity: 1;
+  transform: translateX(-5px) scale(1.1);
+  background: var(--primary, #9d4e7c);
+  color: white;
+  border-color: var(--primary-light, #b86b9a);
+  box-shadow: 0 8px 20px rgba(157, 78, 124, 0.4);
+}
+
+@media (max-width: 768px) {
+  .social-sidebar {
+    display: none;
+  }
+}
