@@ -1,3 +1,4 @@
+// fix: força recarregamento das variáveis de ambiente
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
