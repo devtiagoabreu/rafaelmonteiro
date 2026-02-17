@@ -1,3 +1,4 @@
+// src/app/api/webhooks/mercadopago/route.ts
 import { NextResponse } from 'next/server'
 import { Payment, MerchantOrder } from 'mercadopago'
 import { prisma } from '@/lib/prisma'
@@ -205,15 +206,27 @@ async function processarPagamento(paymentId: string | number) {
         where: { id: '6' }
       })
       
-      await sendPaymentConfirmationEmails({
-        userEmail: email,
-        userName: user.fullName,
-        userPhone: user.phone || 'Não informado',
-        product: comboProduct || { title: 'Pacote Completo', price: 29.90 },
-        paymentId: paymentId.toString(),
-        isCombo: true,
-        books: livrosCombo,
-      })
+      console.log('📧 ===== INICIANDO ENVIO DE E-MAIL DO COMBO =====');
+      console.log('📧 Email do usuário:', email);
+      console.log('📧 Nome do usuário:', user.fullName);
+      console.log('📧 Produto:', comboProduct?.title);
+      console.log('📧 É combo?', true);
+      console.log('📧 Livros:', livrosCombo.map(l => l.title));
+      
+      try {
+        await sendPaymentConfirmationEmails({
+          userEmail: email,
+          userName: user.fullName,
+          userPhone: user.phone || 'Não informado',
+          product: comboProduct || { title: 'Pacote Completo', price: 29.90 },
+          paymentId: paymentId.toString(),
+          isCombo: true,
+          books: livrosCombo,
+        });
+        console.log('✅ Função de e-mail do combo executada com sucesso');
+      } catch (emailError) {
+        console.error('❌ ERRO ao executar função de e-mail do combo:', emailError);
+      }
       
       return
     }
@@ -255,16 +268,26 @@ async function processarPagamento(paymentId: string | number) {
     console.log(`✅ Pagamento ${paymentId} processado para ${email}`)
     console.log(`📊 ID do registro: ${result.id}`)
     
-    // Enviar e-mails de confirmação para livro individual
-    await sendPaymentConfirmationEmails({
-      userEmail: email,
-      userName: user.fullName,
-      userPhone: user.phone || 'Não informado',
-      product,
-      paymentId: paymentId.toString(),
-      isCombo: false,
-      books: [],
-    })
+    console.log('📧 ===== INICIANDO ENVIO DE E-MAIL DO LIVRO INDIVIDUAL =====');
+    console.log('📧 Email do usuário:', email);
+    console.log('📧 Nome do usuário:', user.fullName);
+    console.log('📧 Produto:', product.title);
+    console.log('📧 É combo?', false);
+    
+    try {
+      await sendPaymentConfirmationEmails({
+        userEmail: email,
+        userName: user.fullName,
+        userPhone: user.phone || 'Não informado',
+        product,
+        paymentId: paymentId.toString(),
+        isCombo: false,
+        books: [],
+      });
+      console.log('✅ Função de e-mail do livro executada com sucesso');
+    } catch (emailError) {
+      console.error('❌ ERRO ao executar função de e-mail do livro:', emailError);
+    }
     
   } catch (error) {
     console.error(`🔴 Erro ao processar pagamento ${paymentId}:`, error)
