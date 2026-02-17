@@ -266,7 +266,7 @@ export default function Livro1Page() {
               onClick={() => handleBuyClick({
                 id: 'combo',
                 title: 'Pacote Completo',
-                price: 29.90
+                price: 0.10
               })}
             >
               <i className="fas fa-gift"></i> Comprar Pacote Completo
