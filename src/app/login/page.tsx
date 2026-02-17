@@ -1,15 +1,18 @@
 'use client'
 
+import { Suspense } from 'react'
 import { useState, useEffect } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
 
-export default function LoginPage() {
+// Componente que usa useSearchParams (deve estar dentro de Suspense)
+function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const emailFromUrl = searchParams.get('email') || ''
+
   const [email, setEmail] = useState(emailFromUrl)
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -19,7 +22,6 @@ export default function LoginPage() {
   const [needsPasswordCreation, setNeedsPasswordCreation] = useState(false)
   const [userChecked, setUserChecked] = useState(false)
 
-  // Função para verificar o email assim que o usuário para de digitar
   const checkUserStatus = async (emailToCheck: string) => {
     if (!emailToCheck) return
 
@@ -30,25 +32,20 @@ export default function LoginPage() {
       setUserChecked(true)
       
       if (data.exists && data.hasPurchased) {
-        // Usuário existe e tem compras
         if (!data.hasPassword) {
-          // Não tem senha - primeiro acesso
           setIsFirstAccess(true)
           setNeedsPasswordCreation(true)
-          setError('✅ Primeiro acesso detectado! Clique em "Continuar" para criar sua senha.')
+          setError('✅ Primeiro acesso detectado! Clique em "Criar senha" para continuar.')
         } else {
-          // Tem senha - login normal
           setIsFirstAccess(false)
           setNeedsPasswordCreation(false)
           setError('')
         }
       } else if (data.exists && !data.hasPurchased) {
-        // Usuário existe mas não tem compras
         setError('❌ Você ainda não possui nenhum produto. Adquira um livro primeiro!')
         setIsFirstAccess(false)
         setNeedsPasswordCreation(false)
       } else {
-        // Usuário não existe
         setError('❌ Email não cadastrado. Primeiro faça uma compra!')
         setIsFirstAccess(false)
         setNeedsPasswordCreation(false)
@@ -59,7 +56,6 @@ export default function LoginPage() {
     }
   }
 
-  // Verificar quando o email muda (após 500ms de inatividade)
   useEffect(() => {
     const timer = setTimeout(() => {
       if (email) {
@@ -80,12 +76,10 @@ export default function LoginPage() {
 
     try {
       if (needsPasswordCreation) {
-        // Redirecionar para criar senha
         router.push(`/criar-senha?email=${encodeURIComponent(email)}`)
         return
       }
 
-      // Tentar login normal
       const result = await signIn('credentials', {
         email,
         password,
@@ -107,24 +101,17 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-900 to-purple-900 flex items-center justify-center p-4">
       <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-8">
-        {/* Header */}
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            Portal do Leitor
-          </h2>
-          <p className="text-gray-600">
-            Acesse seus livros da Jornada Relacionamentos Conscientes
-          </p>
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">Portal do Leitor</h2>
+          <p className="text-gray-600">Acesse seus livros da Jornada Relacionamentos Conscientes</p>
         </div>
 
-        {/* Mensagem de ajuda - SEMPRE VISÍVEL */}
         <div className="bg-blue-50 border-l-4 border-blue-500 p-4 mb-6">
           <p className="text-sm text-blue-700">
-            <strong>💡 Primeiro acesso?</strong> Digite seu email e aguarde. Se você já comprou, será orientado a criar sua senha.
+            <strong>💡 Primeiro acesso?</strong> Digite seu email e aguarde. Se você já comprou, o botão "Criar senha" aparecerá.
           </p>
         </div>
 
-        {/* Mensagem de erro/sucesso */}
         {error && (
           <div className={`border-l-4 p-4 mb-6 ${
             error.includes('✅') ? 'bg-green-50 border-green-500' : 
@@ -140,7 +127,6 @@ export default function LoginPage() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Email cadastrado na compra
@@ -156,18 +142,13 @@ export default function LoginPage() {
               autoComplete="email"
             />
             {email && !userChecked && (
-              <p className="text-xs text-gray-500 mt-1">
-                Verificando email...
-              </p>
+              <p className="text-xs text-gray-500 mt-1">Verificando email...</p>
             )}
           </div>
 
-          {/* Senha - só aparece se não for primeiro acesso */}
           {!needsPasswordCreation && userChecked && (
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Senha
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Senha</label>
               <div className="relative">
                 <input
                   type={showPassword ? 'text' : 'password'}
@@ -184,17 +165,12 @@ export default function LoginPage() {
                   className="absolute right-3 top-3 text-gray-500 hover:text-gray-700"
                   tabIndex={-1}
                 >
-                  {showPassword ? (
-                    <EyeSlashIcon className="h-6 w-6" />
-                  ) : (
-                    <EyeIcon className="h-6 w-6" />
-                  )}
+                  {showPassword ? <EyeSlashIcon className="h-6 w-6" /> : <EyeIcon className="h-6 w-6" />}
                 </button>
               </div>
             </div>
           )}
 
-          {/* Checkbox de primeiro acesso - manual */}
           <div className="flex items-center">
             <input
               type="checkbox"
@@ -203,9 +179,7 @@ export default function LoginPage() {
               onChange={(e) => {
                 setIsFirstAccess(e.target.checked)
                 setNeedsPasswordCreation(e.target.checked)
-                if (e.target.checked) {
-                  setPassword('')
-                }
+                if (e.target.checked) setPassword('')
               }}
               className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
             />
@@ -214,7 +188,6 @@ export default function LoginPage() {
             </label>
           </div>
 
-          {/* Aviso de senha em branco */}
           {isFirstAccess && (
             <div className="bg-green-50 border-l-4 border-green-500 p-3">
               <p className="text-sm text-green-700">
@@ -223,7 +196,6 @@ export default function LoginPage() {
             </div>
           )}
 
-          {/* Botão de submit - texto dinâmico */}
           <button
             type="submit"
             disabled={loading || !userChecked}
@@ -235,7 +207,6 @@ export default function LoginPage() {
           </button>
         </form>
 
-        {/* Links de ajuda */}
         <div className="mt-6 space-y-2 text-center">
           <Link href="/recuperar-senha" className="text-sm text-indigo-600 hover:underline block">
             Esqueceu sua senha?
@@ -243,11 +214,24 @@ export default function LoginPage() {
           <p className="text-xs text-gray-500 mt-4">
             * Apenas clientes que já realizaram uma compra podem acessar o portal.
           </p>
-          <p className="text-xs text-gray-400 mt-2">
-            © 2026 Rafael Monteiro - Jornada Relacionamentos Conscientes
-          </p>
         </div>
       </div>
     </div>
+  )
+}
+
+// Página principal com Suspense
+export default function LoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-indigo-900 to-purple-900 flex items-center justify-center p-4">
+        <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-8 text-center">
+          <div className="text-4xl mb-4 animate-spin">⏳</div>
+          <h2 className="text-2xl font-bold mb-4">Carregando...</h2>
+        </div>
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
   )
 }

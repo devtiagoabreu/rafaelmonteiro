@@ -1,9 +1,23 @@
+// src/app/dashboard/page.tsx
+import type { Viewport } from 'next'
 import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { authOptions } from '@/lib/auth'
 import Link from 'next/link'
 import { BookOpenIcon, GiftIcon, ArrowRightIcon } from '@heroicons/react/24/outline'
+
+// Viewport export - Server Component pode ter
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#1a1a1a' },
+  ],
+}
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions)
@@ -30,18 +44,17 @@ export default async function DashboardPage() {
     redirect('/login')
   }
 
-  // 🔴 FILTRAR APENAS LIVROS INDIVIDUAIS (bookNumber entre 1 e 5)
-  // Excluir o combo (bookNumber null, isCombo true)
+  // Filtrar apenas livros individuais (bookNumber entre 1 e 5)
   const purchasedProducts = user.products
     .filter(up => up.paymentStatus === 'paid')
     .map(up => up.product)
     .filter(product => product.bookNumber && product.bookNumber >= 1 && product.bookNumber <= 5)
-    .sort((a, b) => (a.bookNumber || 0) - (b.bookNumber || 0)) // Ordenar por número do livro
+    .sort((a, b) => (a.bookNumber || 0) - (b.bookNumber || 0))
 
-  // Verificar se há produtos pendentes (incluindo combo)
+  // Verificar se há produtos pendentes
   const pendingProducts = user.products.filter(up => up.paymentStatus === 'pending')
 
-  // Verificar se o usuário tem o combo (para fins de informação)
+  // Verificar se o usuário tem o combo
   const hasCombo = user.products.some(
     up => up.paymentStatus === 'paid' && up.product.isCombo
   )
@@ -134,7 +147,7 @@ export default async function DashboardPage() {
           <>
             <h2 className="text-2xl font-bold mb-4 text-gray-800">Sua Coleção</h2>
             
-            {/* 🔴 AVISO DO COMBO (se tiver) */}
+            {/* Aviso do combo */}
             {hasCombo && (
               <div className="bg-green-50 border-l-4 border-green-500 p-4 mb-4 rounded-lg">
                 <p className="text-sm text-green-700">

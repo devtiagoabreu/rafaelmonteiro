@@ -1,12 +1,24 @@
-'use client'
-
+// /criar-senha
+import type { Viewport } from 'next'
 import { Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
 import Link from 'next/link'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
 
-// Componente que usa useSearchParams
+// Viewport export - Server Component pode ter
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#1a1a1a' },
+  ],
+}
+
+// Componente que usa useSearchParams (Client Component)
 function CreatePasswordForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
