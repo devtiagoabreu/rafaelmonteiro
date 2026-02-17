@@ -236,8 +236,8 @@ export default function HomePage() {
             <Image
               src="/images/ebook-o-desejo-nao-morre-ele-e-mal-cuidado.png"
               alt="Capa do livro O Desejo Não Morre"
-              width={200}
-              height={400}
+              width={400}
+              height={600}
               className="w-full h-full object-contain"
               priority
             />
