@@ -1,3 +1,4 @@
+// src/app/page.tsx
 'use client'
 
 import { useSession } from 'next-auth/react'
@@ -15,12 +16,11 @@ export default function HomePage() {
   const { data: session } = useSession()
   const [showRegistrationModal, setShowRegistrationModal] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<any>(null)
-  const [theme, setTheme] = useState<'dark' | 'light'>('light') // MUDADO PARA LIGHT COMO PADRÃO
+  const [theme, setTheme] = useState<'dark' | 'light'>('light')
   const [fontSize, setFontSize] = useState<'small' | 'medium' | 'large'>('medium')
   const [isNarrating, setIsNarrating] = useState(false)
   const [speech, setSpeech] = useState<SpeechSynthesisUtterance | null>(null)
 
-  // Carregar preferências salvas
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') as 'dark' | 'light' | null
     const savedFontSize = localStorage.getItem('fontSize') as 'small' | 'medium' | 'large' | null
@@ -29,7 +29,6 @@ export default function HomePage() {
       setTheme(savedTheme)
       document.documentElement.setAttribute('data-theme', savedTheme)
     } else {
-      // PADRÃO LIGHT
       document.documentElement.setAttribute('data-theme', 'light')
     }
     
@@ -158,13 +157,9 @@ export default function HomePage() {
 
   return (
     <main className="min-h-screen">
-      {/* Redes Sociais Laterais (menores) */}
       <SocialSidebar />
-      
-      {/* WhatsApp Flutuante */}
       <WhatsAppFloat phoneNumber="5519994559836" />
 
-      {/* Indicador de Narração */}
       {isNarrating && (
         <div className="narration-indicator">
           <i className="fas fa-volume-up"></i>
@@ -175,7 +170,6 @@ export default function HomePage() {
         </div>
       )}
 
-      {/* HEADER COM CONTROLES NO NAVBAR */}
       <header className="landing-header">
         <div className="container">
           <div className="logo-area">
@@ -185,7 +179,6 @@ export default function HomePage() {
           </div>
           
           <div className="header-actions">
-            {/* Controles de Acessibilidade no Navbar */}
             <NavbarControls
               onThemeToggle={handleThemeToggle}
               onFontIncrease={handleFontIncrease}
@@ -196,17 +189,11 @@ export default function HomePage() {
             />
             
             {session ? (
-              <Link 
-                href="/dashboard" 
-                className="header-btn"
-              >
+              <Link href="/dashboard" className="header-btn">
                 Meu Painel
               </Link>
             ) : (
-              <Link 
-                href="/login" 
-                className="header-btn"
-              >
+              <Link href="/login" className="header-btn">
                 Entrar
               </Link>
             )}
@@ -214,7 +201,6 @@ export default function HomePage() {
         </div>
       </header>
 
-      {/* HERO SECTION */}
       <section className="landing-hero">
         <div className="container">
           <div className="hero-content">
@@ -223,7 +209,6 @@ export default function HomePage() {
             </div>
             
             <h1>O Desejo Não Morre</h1>
-            
             <p className="subtitle">Ele É Mal Cuidado</p>
             
             <p className="description">
@@ -231,18 +216,11 @@ export default function HomePage() {
             </p>
             
             <div className="cta-buttons">
-              <button
-                onClick={handleFreeBookClick}
-                className="btn-primary"
-              >
-                <span>📘</span>
-                Acesso Grátis ao Livro 1
+              <button onClick={handleFreeBookClick} className="btn-primary">
+                <span>📘</span> Acesso Grátis ao Livro 1
               </button>
               
-              <a 
-                href="#livros" 
-                className="btn-secondary"
-              >
+              <a href="#livros" className="btn-secondary">
                 Conheça a Série Completa
               </a>
             </div>
@@ -254,21 +232,19 @@ export default function HomePage() {
             </div>
           </div>
           
-          {/* Coluna da Direita - Imagem do Livro */}
           <div className="hero-image">
             <Image
               src="/images/ebook-o-desejo-nao-morre-ele-e-mal-cuidado.png"
               alt="Capa do livro O Desejo Não Morre"
               width={200}
               height={400}
-              className="w-full h-full object-cover rounded-2xl"
-              priority // Prioriza o carregamento desta imagem
+              className="w-full h-full object-contain"
+              priority
             />
           </div>
         </div>
       </section>
 
-      {/* SEÇÃO DE DOWNLOADS DO LIVRO 1 */}
       <section className="formats-section">
         <div className="container">
           <h2>📥 Todos os Formatos Inclusos no Livro 1</h2>
@@ -296,10 +272,7 @@ export default function HomePage() {
           </div>
           
           <div className="text-center mt-12">
-            <button
-              onClick={handleFreeBookClick}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xl px-12 py-4 rounded-full shadow-2xl hover:shadow-3xl transition transform hover:scale-105"
-            >
+            <button onClick={handleFreeBookClick} className="bg-indigo-600">
               🔥 Quero meu livro grátis agora!
             </button>
             <p className="text-sm text-gray-500 mt-4">* Acesso imediato após cadastro</p>
@@ -307,7 +280,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* SEÇÃO DE LIVROS À VENDA */}
       <section id="livros" className="books-section">
         <div className="container">
           <h2>Continue Sua Jornada de Transformação</h2>
@@ -335,11 +307,7 @@ export default function HomePage() {
                   <span className="discount-badge">79% OFF</span>
                 </div>
                 <button
-                  onClick={() => handleBuyClick({
-                    id: 2,
-                    title: 'Por Que Você Se Atrai Sempre Pelo Mesmo Tipo de Pessoa',
-                    price: 9.90
-                  })}
+                  onClick={() => handleBuyClick({ id: 2, title: 'Por Que Você Se Atrai Sempre Pelo Mesmo Tipo de Pessoa', price: 9.90 })}
                   className="buy-btn"
                 >
                   Comprar Agora
@@ -366,11 +334,7 @@ export default function HomePage() {
                   <span className="discount-badge">79% OFF</span>
                 </div>
                 <button
-                  onClick={() => handleBuyClick({
-                    id: 3,
-                    title: 'Ciúme, Insegurança e Medo de Perder',
-                    price: 9.90
-                  })}
+                  onClick={() => handleBuyClick({ id: 3, title: 'Ciúme, Insegurança e Medo de Perder', price: 9.90 })}
                   className="buy-btn"
                 >
                   Comprar Agora
@@ -397,11 +361,7 @@ export default function HomePage() {
                   <span className="discount-badge">79% OFF</span>
                 </div>
                 <button
-                  onClick={() => handleBuyClick({
-                    id: 4,
-                    title: 'Quando o Amor Vira Dependência',
-                    price: 9.90
-                  })}
+                  onClick={() => handleBuyClick({ id: 4, title: 'Quando o Amor Vira Dependência', price: 9.90 })}
                   className="buy-btn"
                 >
                   Comprar Agora
@@ -428,11 +388,7 @@ export default function HomePage() {
                   <span className="discount-badge">79% OFF</span>
                 </div>
                 <button
-                  onClick={() => handleBuyClick({
-                    id: 5,
-                    title: 'Relacionamentos Conscientes',
-                    price: 9.90
-                  })}
+                  onClick={() => handleBuyClick({ id: 5, title: 'Relacionamentos Conscientes', price: 9.90 })}
                   className="buy-btn"
                 >
                   Comprar Agora
@@ -441,18 +397,13 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* COMBO EM DESTAQUE */}
           <div className="combo-highlight">
             <h3>🎁 Pacote Completo com Super Desconto</h3>
             <p>Adquira todos os 4 livros e economize!</p>
             <div className="price">R$ 29,90</div>
             <p className="save"><s>De R$ 191,60</s> • Economize R$ 161,70</p>
             <button
-              onClick={() => handleBuyClick({
-                id: 6,
-                title: 'Pacote Completo',
-                price: 29.90
-              })}
+              onClick={() => handleBuyClick({ id: 6, title: 'Pacote Completo', price: 29.90 })}
               className="combo-btn"
             >
               🔥 Comprar Pacote Completo
@@ -461,10 +412,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* SEÇÃO DE PERGUNTAS FREQUENTES */}
       <FaqSection />
 
-      {/* SEÇÃO DE GARANTIA */}
       <section className="py-12 bg-indigo-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="guarantee-section">
@@ -487,7 +436,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* FOOTER */}
       <footer className="landing-footer">
         <div className="container">
           <div className="footer-grid">
@@ -524,7 +472,6 @@ export default function HomePage() {
         </div>
       </footer>
 
-      {/* MODAL */}
       <RegistrationModal
         isOpen={showRegistrationModal}
         onClose={() => setShowRegistrationModal(false)}
