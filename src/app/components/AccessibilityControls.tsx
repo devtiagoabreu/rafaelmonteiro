@@ -1,11 +1,10 @@
+// src/app/components/AccessibilityControls.tsx
 'use client'
 
 import { useState, useEffect } from 'react'
 
 interface AccessibilityControlsProps {
   onThemeToggle: () => void
-  onFontIncrease: () => void
-  onFontDecrease: () => void
   onNarrate: () => void
   isNarrating: boolean
   currentTheme: 'dark' | 'light'
@@ -13,8 +12,6 @@ interface AccessibilityControlsProps {
 
 export default function AccessibilityControls({
   onThemeToggle,
-  onFontIncrease,
-  onFontDecrease,
   onNarrate,
   isNarrating,
   currentTheme
@@ -38,24 +35,6 @@ export default function AccessibilityControls({
         <span className="tooltip">
           {currentTheme === 'dark' ? 'Modo Claro' : 'Modo Escuro'}
         </span>
-      </button>
-
-      <button
-        onClick={onFontIncrease}
-        className="accessibility-btn"
-        title="Aumentar fonte"
-      >
-        <i className="fas fa-search-plus"></i>
-        <span className="tooltip">Aumentar Fonte</span>
-      </button>
-
-      <button
-        onClick={onFontDecrease}
-        className="accessibility-btn"
-        title="Diminuir fonte"
-      >
-        <i className="fas fa-search-minus"></i>
-        <span className="tooltip">Diminuir Fonte</span>
       </button>
 
       <button

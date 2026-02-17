@@ -181,8 +181,6 @@ export default function HomePage() {
           <div className="header-actions">
             <NavbarControls
               onThemeToggle={handleThemeToggle}
-              onFontIncrease={handleFontIncrease}
-              onFontDecrease={handleFontDecrease}
               onNarrate={handleNarrate}
               isNarrating={isNarrating}
               currentTheme={theme}

@@ -1,9 +1,8 @@
+// src/app/components/NavbarControls.tsx
 'use client'
 
 interface NavbarControlsProps {
   onThemeToggle: () => void
-  onFontIncrease: () => void
-  onFontDecrease: () => void
   onNarrate: () => void
   isNarrating: boolean
   currentTheme: 'dark' | 'light'
@@ -11,8 +10,6 @@ interface NavbarControlsProps {
 
 export default function NavbarControls({
   onThemeToggle,
-  onFontIncrease,
-  onFontDecrease,
   onNarrate,
   isNarrating,
   currentTheme
@@ -25,22 +22,6 @@ export default function NavbarControls({
         title={currentTheme === 'dark' ? 'Mudar para modo claro' : 'Mudar para modo escuro'}
       >
         <i className={`fas fa-${currentTheme === 'dark' ? 'sun' : 'moon'}`}></i>
-      </button>
-
-      <button
-        onClick={onFontIncrease}
-        className="navbar-btn"
-        title="Aumentar fonte"
-      >
-        <i className="fas fa-search-plus"></i>
-      </button>
-
-      <button
-        onClick={onFontDecrease}
-        className="navbar-btn"
-        title="Diminuir fonte"
-      >
-        <i className="fas fa-search-minus"></i>
       </button>
 
       <button
