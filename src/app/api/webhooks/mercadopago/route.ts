@@ -1,4 +1,3 @@
-// src/app/api/webhooks/mercadopago/route.ts
 import { NextResponse } from 'next/server'
 import { Payment, MerchantOrder } from 'mercadopago'
 import { prisma } from '@/lib/prisma'
@@ -177,8 +176,7 @@ async function processarPagamento(paymentId: string | number) {
         resultados.push(livro.bookNumber)
       }
       
-      // 🔥 AGORA TAMBÉM REGISTRA O PRÓPRIO COMBO (opcional)
-      // Isso mantém o registro de que o usuário comprou o combo
+      // Registra o combo também
       await prisma.userProduct.upsert({
         where: {
           userId_productId: {
@@ -210,8 +208,6 @@ async function processarPagamento(paymentId: string | number) {
       console.log('📧 Email do usuário:', email);
       console.log('📧 Nome do usuário:', user.fullName);
       console.log('📧 Produto:', comboProduct?.title);
-      console.log('📧 É combo?', true);
-      console.log('📧 Livros:', livrosCombo.map(l => l.title));
       
       try {
         await sendPaymentConfirmationEmails({
@@ -272,7 +268,6 @@ async function processarPagamento(paymentId: string | number) {
     console.log('📧 Email do usuário:', email);
     console.log('📧 Nome do usuário:', user.fullName);
     console.log('📧 Produto:', product.title);
-    console.log('📧 É combo?', false);
     
     try {
       await sendPaymentConfirmationEmails({

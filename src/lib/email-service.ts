@@ -26,8 +26,8 @@ export async function sendPaymentConfirmationEmails({
   isCombo,
   books = [],
 }: SendPaymentEmailsParams) {
-  console.log('📧 ===== INICIANDO sendPaymentConfirmationEmails =====');
-  console.log('📧 Parâmetros recebidos:', {
+  console.log('📧 ===== INICIANDO ENVIO DE E-MAILS DE CONFIRMAÇÃO =====');
+  console.log('📧 Dados recebidos:', {
     userEmail,
     userName,
     userPhone,
@@ -56,9 +56,9 @@ export async function sendPaymentConfirmationEmails({
 
   try {
     console.log('📧 Verificando variáveis de ambiente...');
-    console.log('📧 RESEND_API_KEY existe?', process.env.RESEND_API_KEY ? 'SIM' : 'NÃO');
-    console.log('📧 EMAIL_FROM:', process.env.EMAIL_FROM || 'NÃO CONFIGURADO');
-    console.log('📧 ADMIN_EMAIL:', process.env.ADMIN_EMAIL || 'NÃO CONFIGURADO');
+    console.log('📧 GMAIL_USER:', process.env.GMAIL_USER ? '✅ configurado' : '❌ não configurado');
+    console.log('📧 GMAIL_APP_PASS:', process.env.GMAIL_APP_PASS ? '✅ configurado' : '❌ não configurado');
+    console.log('📧 ADMIN_EMAIL:', process.env.ADMIN_EMAIL || '❌ não configurado');
 
     const baseUrl = process.env.VERCEL_URL 
       ? `https://${process.env.VERCEL_URL}` 
@@ -68,7 +68,7 @@ export async function sendPaymentConfirmationEmails({
 
     // Formatar lista de livros para o combo
     const bookTitles = books.map(book => `• ${book.title} (Livro ${book.bookNumber})`);
-    console.log('📧 Títulos dos livros formatados:', bookTitles);
+    console.log('📧 Livros formatados:', bookTitles);
 
     // 1️⃣ E-mail para o cliente
     console.log(`📧 Gerando e-mail para cliente: ${userEmail}`);
@@ -100,7 +100,7 @@ export async function sendPaymentConfirmationEmails({
     if (!clientResult.success) {
       console.error('❌ Falha ao enviar e-mail para o cliente:', clientResult.error);
     } else {
-      console.log('✅ E-mail do cliente enviado com sucesso. ID:', clientResult.data?.id);
+      console.log('✅ E-mail do cliente enviado com sucesso. ID:', clientResult.data?.messageId);
     }
 
     // 2️⃣ E-mail para o administrador (você)
@@ -139,11 +139,11 @@ export async function sendPaymentConfirmationEmails({
       if (!adminResult.success) {
         console.error('❌ Falha ao enviar e-mail para administrador:', adminResult.error);
       } else {
-        console.log('✅ E-mail do administrador enviado com sucesso. ID:', adminResult.data?.id);
+        console.log('✅ E-mail do administrador enviado com sucesso. ID:', adminResult.data?.messageId);
       }
     }
 
-    console.log('📧 ===== FINALIZANDO sendPaymentConfirmationEmails =====');
+    console.log('📧 ===== FINALIZANDO ENVIO DE E-MAILS =====');
     
   } catch (error) {
     console.error('❌ ERRO CRÍTICO no serviço de e-mail:', error);

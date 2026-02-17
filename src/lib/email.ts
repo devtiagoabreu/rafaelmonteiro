@@ -1,8 +1,19 @@
 // src/lib/email.ts
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 
-// Inicializar Resend com a API key
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Configuração do transporte SMTP do Gmail
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST || 'smtp.gmail.com',
+  port: parseInt(process.env.SMTP_PORT || '587'),
+  secure: false, // true para 465, false para 587
+  auth: {
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASS,
+  },
+  tls: {
+    rejectUnauthorized: false, // Evita erros de certificado em desenvolvimento
+  },
+});
 
 interface EmailData {
   to: string;
@@ -13,44 +24,56 @@ interface EmailData {
 }
 
 export async function sendEmail({ to, subject, html, text, from }: EmailData) {
-  console.log(`📧 sendEmail: Preparando envio para ${to}`);
-  console.log(`📧 Assunto: ${subject}`);
+  console.log('📧 ===== NOEMAILER ENVIANDO E-MAIL =====');
+  console.log('📧 Para:', to);
+  console.log('📧 Assunto:', subject);
   
   try {
-    // Verificar se a API key existe
-    if (!process.env.RESEND_API_KEY) {
-      console.error('❌ RESEND_API_KEY não está definida nas variáveis de ambiente');
-      return { success: false, error: 'RESEND_API_KEY não configurada' };
+    // Verificar credenciais
+    if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASS) {
+      console.error('❌ GMAIL_USER ou GMAIL_APP_PASS não configurados');
+      return { success: false, error: 'Credenciais de e-mail não configuradas' };
     }
 
-    // Usar email de fallback se necessário
-    const fromEmail = from || process.env.EMAIL_FROM;
-    
-    if (!fromEmail) {
-      console.error('❌ EMAIL_FROM não está definido');
-      return { success: false, error: 'EMAIL_FROM não configurado' };
-    }
-    
+    // Verificar conexão
+    console.log('📧 Verificando conexão SMTP...');
+    await transporter.verify();
+    console.log('✅ Conexão SMTP verificada com sucesso');
+
+    const fromEmail = from || `"Rafael Monteiro" <${process.env.GMAIL_USER}>`;
+
     console.log('📧 From:', fromEmail);
+    console.log('📧 Enviando e-mail...');
 
-    console.log('📧 Chamando API do Resend...');
-    const { data, error } = await resend.emails.send({
+    const mailOptions = {
       from: fromEmail,
-      to: [to],
-      subject,
-      html,
+      to: to,
+      subject: subject,
       text: text || html.replace(/<[^>]*>/g, ''),
-    });
+      html: html,
+    };
 
-    if (error) {
-      console.error('❌ Resend retornou erro:', error);
-      return { success: false, error };
-    }
+    const info = await transporter.sendMail(mailOptions);
 
-    console.log('✅ Resend sucesso. ID:', data?.id);
-    return { success: true, data };
+    console.log(`✅ E-mail enviado com sucesso! ID: ${info.messageId}`);
+    console.log('📧 Resposta do servidor:', info.response);
+    
+    return { success: true, data: info };
   } catch (error) {
-    console.error('❌ Exceção no sendEmail:', error);
+    console.error('❌ Erro no Nodemailer:', error);
+    
+    // Mensagens de erro mais específicas
+    if (error instanceof Error) {
+      if (error.message.includes('EAUTH')) {
+        console.error('❌ Erro de autenticação: Verifique se a senha de aplicativo está correta');
+      } else if (error.message.includes('ENOTFOUND')) {
+        console.error('❌ Erro de conexão: Verifique o host SMTP');
+      } else if (error.message.includes('ETIMEDOUT')) {
+        console.error('❌ Erro de timeout: O servidor demorou para responder');
+      }
+      console.error('❌ Detalhes do erro:', error.message);
+    }
+    
     return { success: false, error };
   }
 }
