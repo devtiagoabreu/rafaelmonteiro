@@ -1,3 +1,4 @@
+// src/data/livro-1.ts
 export const bookInfo = {
   title: "O Desejo Não Morre — Ele É Mal Cuidado",
   subtitle: "Um guia direto, humano e terapêutico para reconstruir a intimidade no relacionamento",

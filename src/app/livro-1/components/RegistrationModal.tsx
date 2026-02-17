@@ -1,7 +1,9 @@
+// src/app/livro-1/components/RegistrationModal.tsx
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import InputMask from 'react-input-mask'
 
 interface RegistrationModalProps {
   isOpen: boolean
@@ -19,18 +21,35 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [isLoading, setIsLoading] = useState(false)
+  const [acceptedTerms, setAcceptedTerms] = useState(false)
+
+  // Prevenir scroll do body quando modal está aberto
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isOpen])
 
   if (!isOpen) return null
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
 
+    // Nome completo
     if (!formData.fullName.trim()) {
       newErrors.fullName = 'Nome é obrigatório'
     } else if (formData.fullName.trim().length < 3) {
       newErrors.fullName = 'Nome deve ter pelo menos 3 caracteres'
+    } else if (!formData.fullName.includes(' ')) {
+      newErrors.fullName = 'Digite seu nome completo (com sobrenome)'
     }
 
+    // Email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     if (!formData.email) {
       newErrors.email = 'Email é obrigatório'
@@ -38,15 +57,22 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
       newErrors.email = 'Email inválido'
     }
 
+    // Confirmar email
     if (formData.email !== formData.confirmEmail) {
       newErrors.confirmEmail = 'Os emails não coincidem'
     }
 
-    const cleanPhone = formData.phone.replace(/\D/g, '')
+    // Telefone com máscara
+    const phoneRegex = /^\(\d{2}\) \d{5}-\d{4}$/
     if (!formData.phone) {
       newErrors.phone = 'Telefone é obrigatório'
-    } else if (cleanPhone.length < 10 || cleanPhone.length > 11) {
-      newErrors.phone = 'Telefone inválido'
+    } else if (!phoneRegex.test(formData.phone)) {
+      newErrors.phone = 'Telefone inválido. Use (99) 99999-9999'
+    }
+
+    // Termos
+    if (!acceptedTerms) {
+      newErrors.terms = 'Você precisa aceitar os termos para continuar'
     }
 
     setErrors(newErrors)
@@ -60,6 +86,18 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
       setErrors(prev => {
         const newErrors = { ...prev }
         delete newErrors[id]
+        return newErrors
+      })
+    }
+  }
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value
+    setFormData(prev => ({ ...prev, phone: value }))
+    if (errors.phone) {
+      setErrors(prev => {
+        const newErrors = { ...prev }
+        delete newErrors.phone
         return newErrors
       })
     }
@@ -89,7 +127,7 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
         body: JSON.stringify({
           fullName: formData.fullName,
           email: formData.email,
-          phone: formData.phone,
+          phone: formData.phone.replace(/\D/g, ''), // Remove máscara para salvar
           productId: selectedProduct?.id?.toString() || ''
         })
       })
@@ -128,7 +166,6 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
         console.log('✅ Preferência criada:', preferenceData)
 
         if (preferenceData.init_point) {
-          // Redirecionar para o Mercado Pago
           window.location.href = preferenceData.init_point
         } else {
           alert('Erro ao criar pagamento. Tente novamente.')
@@ -148,34 +185,65 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
   return (
     <div className="modal-overlay active" onClick={onClose}>
       <div className="modal registration-modal" onClick={e => e.stopPropagation()}>
-        <div className="modal-header">
-          <h3>Cadastro Obrigatório</h3>
+        {/* Header com gradiente */}
+        <div className="modal-header" style={{
+          background: isFree 
+            ? 'linear-gradient(135deg, #10B981, #059669)' 
+            : 'linear-gradient(135deg, #4a5fa8, #3a4c8f)',
+        }}>
+          <div>
+            <h3>{isFree ? '🎁 Livro Grátis' : '📚 Finalizar Compra'}</h3>
+            <p style={{ fontSize: '0.9rem', opacity: 0.9, marginTop: '4px' }}>
+              {isFree 
+                ? 'Crie sua conta para acessar o livro gratuitamente'
+                : 'Crie sua conta e seja redirecionado para o pagamento'}
+            </p>
+          </div>
           <button className="close-modal" onClick={onClose}>
             <i className="fas fa-times"></i>
           </button>
         </div>
         
         <div className="modal-content">
-          <div className="form-info">
-            <i className="fas fa-info-circle"></i>
-            <strong>Importante:</strong> Seu email será utilizado para fazer login no portal e acessar seus livros.
+          {/* Benefícios em cards */}
+          <div className="benefits-grid">
+            <div className="benefit-card">
+              <span className="benefit-icon">📚</span>
+              <span className="benefit-text">Acesso Vitalício</span>
+            </div>
+            <div className="benefit-card">
+              <span className="benefit-icon">🎧</span>
+              <span className="benefit-text">Todos os Formatos</span>
+            </div>
+            <div className="benefit-card">
+              <span className="benefit-icon">🔄</span>
+              <span className="benefit-text">Atualizações Grátis</span>
+            </div>
           </div>
 
+          {/* Informação importante */}
+          <div className="info-box">
+            <i className="fas fa-info-circle"></i>
+            <span>
+              <strong>Importante:</strong> Seu email será usado para fazer login no portal. 
+              Você receberá as instruções de acesso após a confirmação.
+            </span>
+          </div>
+
+          {/* Mensagem de erro do servidor */}
           {errors.submit && (
-            <div className="error-message show" style={{ 
-              marginBottom: '20px', 
-              color: '#EF4444', 
-              background: '#FEE2E2', 
-              padding: '10px', 
-              borderRadius: '4px' 
-            }}>
-              {errors.submit}
+            <div className="error-box">
+              <i className="fas fa-exclamation-circle"></i>
+              <span>{errors.submit}</span>
             </div>
           )}
 
           <form onSubmit={handleSubmit}>
+            {/* Nome Completo */}
             <div className="form-group">
-              <label htmlFor="fullName">Nome Completo *</label>
+              <label htmlFor="fullName">
+                Nome Completo <span className="required">*</span>
+              </label>
               <input
                 type="text"
                 id="fullName"
@@ -186,10 +254,14 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
                 placeholder="Digite seu nome completo"
               />
               {errors.fullName && <div className="error-message show">{errors.fullName}</div>}
+              <small className="field-hint">Ex: João Silva Santos</small>
             </div>
 
+            {/* Email */}
             <div className="form-group">
-              <label htmlFor="email">Email *</label>
+              <label htmlFor="email">
+                Email <span className="required">*</span>
+              </label>
               <input
                 type="email"
                 id="email"
@@ -200,10 +272,14 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
                 placeholder="seu@email.com"
               />
               {errors.email && <div className="error-message show">{errors.email}</div>}
+              <small className="field-hint">Usado para login no portal</small>
             </div>
 
+            {/* Confirmar Email */}
             <div className="form-group">
-              <label htmlFor="confirmEmail">Confirmar Email *</label>
+              <label htmlFor="confirmEmail">
+                Confirmar Email <span className="required">*</span>
+              </label>
               <input
                 type="email"
                 id="confirmEmail"
@@ -216,27 +292,89 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
               {errors.confirmEmail && <div className="error-message show">{errors.confirmEmail}</div>}
             </div>
 
+            {/* Telefone com máscara */}
             <div className="form-group">
-              <label htmlFor="phone">Celular com DDD *</label>
-              <input
+              <label htmlFor="phone">
+                Celular com DDD <span className="required">*</span>
+              </label>
+              <InputMask
+                mask="(99) 99999-9999"
+                maskChar={null}
                 type="tel"
                 id="phone"
                 value={formData.phone}
-                onChange={handleInputChange}
-                placeholder="(11) 99999-9999"
+                onChange={handlePhoneChange}
                 className={errors.phone ? 'error' : ''}
                 disabled={isLoading}
+                placeholder="(11) 99999-9999"
               />
               {errors.phone && <div className="error-message show">{errors.phone}</div>}
+              <small className="field-hint">Para contato e recuperação de senha</small>
             </div>
 
+            {/* Termos de uso */}
+            <div className="terms-group">
+              <label className="checkbox-label">
+                <input
+                  type="checkbox"
+                  checked={acceptedTerms}
+                  onChange={(e) => {
+                    setAcceptedTerms(e.target.checked)
+                    if (errors.terms) {
+                      setErrors(prev => {
+                        const newErrors = { ...prev }
+                        delete newErrors.terms
+                        return newErrors
+                      })
+                    }
+                  }}
+                />
+                <span>
+                  Concordo com os <a href="/termos" target="_blank">termos de uso</a> e 
+                  autorizo o recebimento de comunicações por email
+                </span>
+              </label>
+              {errors.terms && <div className="error-message show">{errors.terms}</div>}
+            </div>
+
+            {/* Botões */}
             <div className="form-actions">
-              <button type="button" className="btn-secondary" onClick={onClose} disabled={isLoading}>
+              <button 
+                type="button" 
+                className="btn-secondary" 
+                onClick={onClose} 
+                disabled={isLoading}
+              >
                 Cancelar
               </button>
-              <button type="submit" className="btn-primary" disabled={isLoading}>
-                {isLoading ? 'Processando...' : isFree ? '✅ Liberar Acesso Gratuito' : '💳 Ir para o Pagamento'}
+              <button 
+                type="submit" 
+                className="btn-primary" 
+                disabled={isLoading || !acceptedTerms}
+                style={{
+                  background: isFree 
+                    ? 'linear-gradient(135deg, #10B981, #059669)'
+                    : 'linear-gradient(135deg, #4a5fa8, #3a4c8f)',
+                  opacity: (!acceptedTerms || isLoading) ? 0.7 : 1,
+                }}
+              >
+                {isLoading ? (
+                  <>
+                    <i className="fas fa-spinner fa-spin"></i>
+                    Processando...
+                  </>
+                ) : isFree ? (
+                  '✅ Liberar Acesso Gratuito'
+                ) : (
+                  '💳 Ir para o Pagamento'
+                )}
               </button>
+            </div>
+
+            {/* Aviso de segurança */}
+            <div className="security-note">
+              <i className="fas fa-lock"></i>
+              <span>Seus dados estão seguros. Pagamento processado pelo Mercado Pago.</span>
             </div>
           </form>
         </div>

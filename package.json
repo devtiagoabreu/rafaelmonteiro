@@ -28,6 +28,7 @@
     "react-email": "^5.2.8",
     "react-hook-form": "^7.49.3",
     "react-hot-toast": "^2.4.1",
+    "react-input-mask": "^2.0.4",
     "resend": "^6.9.2"
   },
   "devDependencies": {
@@ -36,6 +37,7 @@
     "@types/nodemailer": "^6.4.22",
     "@types/react": "^18.2.52",
     "@types/react-dom": "^18.2.18",
+    "@types/react-input-mask": "^3.0.6",
     "autoprefixer": "^10.4.17",
     "postcss": "^8.4.33",
     "prisma": "^6.19.2",
