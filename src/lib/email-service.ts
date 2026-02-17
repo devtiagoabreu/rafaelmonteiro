@@ -1,4 +1,3 @@
-// src/lib/email-service.ts
 import { render } from '@react-email/components';
 import { sendEmail } from './email';
 import PaymentConfirmationEmail from '@/emails/PaymentConfirmation';
@@ -27,50 +26,16 @@ export async function sendPaymentConfirmationEmails({
   books = [],
 }: SendPaymentEmailsParams) {
   console.log('📧 ===== INICIANDO ENVIO DE E-MAILS DE CONFIRMAÇÃO =====');
-  console.log('📧 Dados recebidos:', {
-    userEmail,
-    userName,
-    userPhone,
-    productTitle: product?.title,
-    productPrice: product?.price,
-    paymentId,
-    isCombo,
-    booksCount: books.length
-  });
-
-  // VALIDAÇÕES INICIAIS
-  if (!userEmail) {
-    console.error('❌ ERRO: userEmail é obrigatório');
-    return;
-  }
-
-  if (!userName) {
-    console.error('❌ ERRO: userName é obrigatório');
-    return;
-  }
-
-  if (!product) {
-    console.error('❌ ERRO: product é obrigatório');
-    return;
-  }
-
+  
   try {
-    console.log('📧 Verificando variáveis de ambiente...');
-    console.log('📧 GMAIL_USER:', process.env.GMAIL_USER ? '✅ configurado' : '❌ não configurado');
-    console.log('📧 GMAIL_APP_PASS:', process.env.GMAIL_APP_PASS ? '✅ configurado' : '❌ não configurado');
-    console.log('📧 ADMIN_EMAIL:', process.env.ADMIN_EMAIL || '❌ não configurado');
-
     const baseUrl = process.env.VERCEL_URL 
       ? `https://${process.env.VERCEL_URL}` 
       : process.env.NEXTAUTH_URL || 'http://localhost:3000';
 
-    console.log('📧 Base URL:', baseUrl);
-
     // Formatar lista de livros para o combo
     const bookTitles = books.map(book => `• ${book.title} (Livro ${book.bookNumber})`);
-    console.log('📧 Livros formatados:', bookTitles);
 
-    // 1️⃣ E-mail para o cliente
+    // E-mail para o cliente
     console.log(`📧 Gerando e-mail para cliente: ${userEmail}`);
     
     const clientEmailHtml = await render(
@@ -80,13 +45,10 @@ export async function sendPaymentConfirmationEmails({
         productPrice: product.price.toFixed(2).replace('.', ','),
         isCombo,
         books: bookTitles,
-        dashboardUrl: `${baseUrl}/dashboard`,
+        dashboardUrl: `${baseUrl}/login?email=${encodeURIComponent(userEmail)}`, // Link para login com email pré-preenchido
       })
     );
 
-    console.log('📧 HTML do e-mail do cliente gerado, tamanho:', clientEmailHtml.length);
-
-    console.log('📧 Enviando e-mail para cliente...');
     const clientResult = await sendEmail({
       to: userEmail,
       subject: isCombo 
@@ -95,21 +57,11 @@ export async function sendPaymentConfirmationEmails({
       html: clientEmailHtml,
     });
 
-    console.log('📧 Resultado do envio para cliente:', clientResult);
+    console.log(`📧 Resultado cliente:`, clientResult);
 
-    if (!clientResult.success) {
-      console.error('❌ Falha ao enviar e-mail para o cliente:', clientResult.error);
-    } else {
-      console.log('✅ E-mail do cliente enviado com sucesso. ID:', clientResult.data?.messageId);
-    }
-
-    // 2️⃣ E-mail para o administrador (você)
+    // E-mail para o administrador
     const adminEmail = process.env.ADMIN_EMAIL;
-    if (!adminEmail) {
-      console.warn('⚠️ ADMIN_EMAIL não configurado, pulando e-mail para administrador');
-    } else {
-      console.log(`📧 Gerando e-mail para administrador: ${adminEmail}`);
-      
+    if (adminEmail) {
       const adminEmailHtml = await render(
         AdminNotificationEmail({
           userName,
@@ -126,27 +78,16 @@ export async function sendPaymentConfirmationEmails({
         })
       );
 
-      console.log('📧 HTML do e-mail do admin gerado, tamanho:', adminEmailHtml.length);
-
       const adminResult = await sendEmail({
         to: adminEmail,
         subject: `💰 Nova venda: ${product.title}`,
         html: adminEmailHtml,
       });
 
-      console.log('📧 Resultado do envio para admin:', adminResult);
-
-      if (!adminResult.success) {
-        console.error('❌ Falha ao enviar e-mail para administrador:', adminResult.error);
-      } else {
-        console.log('✅ E-mail do administrador enviado com sucesso. ID:', adminResult.data?.messageId);
-      }
+      console.log(`📧 Resultado admin:`, adminResult);
     }
 
-    console.log('📧 ===== FINALIZANDO ENVIO DE E-MAILS =====');
-    
   } catch (error) {
-    console.error('❌ ERRO CRÍTICO no serviço de e-mail:', error);
-    console.error('❌ Stack trace:', error instanceof Error ? error.stack : 'Sem stack trace');
+    console.error('❌ ERRO no serviço de e-mail:', error);
   }
 }

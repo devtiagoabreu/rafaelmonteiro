@@ -2,13 +2,15 @@
 
 import { useState, useEffect } from 'react'
 import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline'
 
 export default function LoginPage() {
   const router = useRouter()
-  const [email, setEmail] = useState('')
+  const searchParams = useSearchParams()
+  const emailFromUrl = searchParams.get('email') || ''
+  const [email, setEmail] = useState(emailFromUrl)
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [isFirstAccess, setIsFirstAccess] = useState(false)
