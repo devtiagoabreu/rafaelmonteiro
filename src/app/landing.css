@@ -1364,3 +1364,14 @@ body {
     padding: 14px 30px;
   }
 }
+
+/* ===== CORREÇÃO DE INPUTS COM AUTOPREENCHIMENTO NA LANDING PAGE ===== */
+.landing-page input:-webkit-autofill,
+.landing-page input:-webkit-autofill:hover,
+.landing-page input:-webkit-autofill:focus,
+.landing-page input:-webkit-autofill:active {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: var(--text-primary) !important;
+  transition: background-color 5000s ease-in-out 0s;
+  box-shadow: inset 0 0 20px 20px var(--bg-primary) !important;
+}
