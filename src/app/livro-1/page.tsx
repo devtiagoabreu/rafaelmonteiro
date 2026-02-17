@@ -264,7 +264,7 @@ export default function Livro1Page() {
             <button 
               className="buy-btn special-price"
               onClick={() => handleBuyClick({
-                id: 'combo',
+                id: 6,
                 title: 'Pacote Completo',
                 price: 0.10
               })}
