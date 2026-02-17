@@ -193,9 +193,9 @@ export default function RegistrationModal({ isOpen, onClose, selectedProduct }: 
         }}>
           <div>
             <h3>{isFree ? '🎁 Livro Grátis' : '📚 Finalizar Compra'}</h3>
-            <p style={{ fontSize: '0.9rem', opacity: 0.9, marginTop: '4px' }}>
+            <p style={{ fontSize: '0.8rem', opacity: 0.9, marginTop: '3px' }}>
               {isFree 
-                ? 'Crie sua conta para acessar o livro gratuitamente'
+                ? 'Para acessar o livro gratuitamente'
                 : 'Crie sua conta e seja redirecionado para o pagamento'}
             </p>
           </div>
