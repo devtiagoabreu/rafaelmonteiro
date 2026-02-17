@@ -97,10 +97,12 @@ export default function Livro1Page() {
   }
 
   const handleNextBooks = () => {
+    console.log('📚 Abrindo página de vendas')
     setShowSalesPage(true)
   }
 
   const handleBackToBook = () => {
+    console.log('📖 Voltando para o livro')
     setShowSalesPage(false)
   }
 
@@ -169,7 +171,7 @@ export default function Livro1Page() {
         </div>
       </div>
 
-      {/* Conteúdo Principal */}
+      {/* Conteúdo Principal ou Página de Vendas */}
       {!showSalesPage ? (
         <div className="container" id="mainContent">
           <header>
@@ -243,7 +245,161 @@ export default function Livro1Page() {
         </div>
       ) : (
         <div className="sales-page active">
-          {/* Conteúdo da página de vendas... */}
+          <div className="sales-header">
+            <h2>Continue Sua Jornada de Transformação</h2>
+            <p>Descubra os próximos livros da série que vão te ajudar a reconstruir relacionamentos mais saudáveis, conscientes e satisfatórios.</p>
+            <button className="back-to-book" onClick={handleBackToBook}>
+              <i className="fas fa-arrow-left"></i> Voltar para o Livro
+            </button>
+          </div>
+
+          {/* PACOTE COMPLETO - DESTAQUE NO TOPO */}
+          <div className="combo-section">
+            <h3>Pacote Completo com Super Desconto</h3>
+            <p>Adquira todos os 4 próximos livros com um desconto especial!</p>
+            <div className="combo-price">R$ 29,90</div>
+            <div className="combo-save">
+              <s>De R$ 191,60</s> • Economize R$ 161,70
+            </div>
+            <button 
+              className="buy-btn special-price"
+              onClick={() => handleBuyClick({
+                id: 'combo',
+                title: 'Pacote Completo',
+                price: 29.90
+              })}
+            >
+              <i className="fas fa-gift"></i> Comprar Pacote Completo
+            </button>
+          </div>
+
+          {/* GRID DE LIVROS INDIVIDUAIS */}
+          <div className="books-grid">
+            {/* Livro 2 */}
+            <div className="book-card">
+              <div className="book-card-header">
+                <h3>Livro 2</h3>
+              </div>
+              <div className="book-card-body">
+                <h4>Por Que Você Se Atrai Sempre Pelo Mesmo Tipo de Pessoa</h4>
+                <ul>
+                  <li><i className="fas fa-check"></i> Padrões inconscientes de atração</li>
+                  <li><i className="fas fa-check"></i> Carência emocional e escolhas repetidas</li>
+                  <li><i className="fas fa-check"></i> Como quebrar ciclos destrutivos</li>
+                  <li><i className="fas fa-check"></i> Exercícios para autoconhecimento</li>
+                </ul>
+                <div className="price">
+                  <div className="old-price">R$ 47,90</div>
+                  <div className="new-price">R$ 9,90</div>
+                  <span className="discount-badge">79% de desconto</span>
+                </div>
+                <button 
+                  className="buy-btn"
+                  onClick={() => handleBuyClick({
+                    id: 2,
+                    title: 'Por Que Você Se Atrai Sempre Pelo Mesmo Tipo de Pessoa',
+                    price: 9.90
+                  })}
+                >
+                  Comprar Agora
+                </button>
+              </div>
+            </div>
+            
+            {/* Livro 3 */}
+            <div className="book-card">
+              <div className="book-card-header">
+                <h3>Livro 3</h3>
+              </div>
+              <div className="book-card-body">
+                <h4>Ciúme, Insegurança e Medo de Perder</h4>
+                <ul>
+                  <li><i className="fas fa-check"></i> Origens emocionais do ciúme</li>
+                  <li><i className="fas fa-check"></i> Como reconstruir segurança emocional</li>
+                  <li><i className="fas fa-check"></i> Técnicas para lidar com a insegurança</li>
+                  <li><i className="fas fa-check"></i> Autoconfiança nos relacionamentos</li>
+                </ul>
+                <div className="price">
+                  <div className="old-price">R$ 47,90</div>
+                  <div className="new-price">R$ 9,90</div>
+                  <span className="discount-badge">79% de desconto</span>
+                </div>
+                <button 
+                  className="buy-btn"
+                  onClick={() => handleBuyClick({
+                    id: 3,
+                    title: 'Ciúme, Insegurança e Medo de Perder',
+                    price: 9.90
+                  })}
+                >
+                  Comprar Agora
+                </button>
+              </div>
+            </div>
+            
+            {/* Livro 4 */}
+            <div className="book-card">
+              <div className="book-card-header">
+                <h3>Livro 4</h3>
+              </div>
+              <div className="book-card-body">
+                <h4>Quando o Amor Vira Dependência</h4>
+                <ul>
+                  <li><i className="fas fa-check"></i> A linha entre amar e se anular</li>
+                  <li><i className="fas fa-check"></i> Sinais de dependência emocional</li>
+                  <li><i className="fas fa-check"></i> A Solidão como Aliada, não como Inimiga</li>
+                  <li><i className="fas fa-check"></i> Recuperando sua autonomia</li>
+                  <li><i className="fas fa-check"></i> Amor saudável vs. apego doentio</li>
+                </ul>
+                <div className="price">
+                  <div className="old-price">R$ 47,90</div>
+                  <div className="new-price">R$ 9,90</div>
+                  <span className="discount-badge">79% de desconto</span>
+                </div>
+                <button 
+                  className="buy-btn"
+                  onClick={() => handleBuyClick({
+                    id: 4,
+                    title: 'Quando o Amor Vira Dependência',
+                    price: 9.90
+                  })}
+                >
+                  Comprar Agora
+                </button>
+              </div>
+            </div>
+            
+            {/* Livro 5 */}
+            <div className="book-card">
+              <div className="book-card-header">
+                <h3>Livro 5</h3>
+              </div>
+              <div className="book-card-body">
+                <h4>Relacionamentos Conscientes</h4>
+                <ul>
+                  <li><i className="fas fa-check"></i> Como amar sem se perder</li>
+                  <li><i className="fas fa-check"></i> Comunicação não violenta</li>
+                  <li><i className="fas fa-check"></i> Limites saudáveis</li>
+                  <li><i className="fas fa-check"></i> Intimidade emocional madura</li>
+                </ul>
+                <div className="price">
+                  <div className="old-price">R$ 47,90</div>
+                  <div className="new-price">R$ 9,90</div>
+                  <span className="discount-badge">79% de desconto</span>
+                </div>
+                <button 
+                  className="buy-btn"
+                  onClick={() => handleBuyClick({
+                    id: 5,
+                    title: 'Relacionamentos Conscientes',
+                    price: 9.90
+                  })}
+                >
+                  Comprar Agora
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
